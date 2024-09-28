@@ -11,6 +11,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
+import com.sa7.jobfiy.app.JobfiyApp
+import com.sa7.jobfiy.ui.navigation.AppNavGraph
 import com.sa7.jobfiy.ui.theme.JobfiyTheme
 
 class MainActivity : ComponentActivity() {
@@ -18,30 +21,15 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            JobfiyTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
-            }
+            JobfiyApp()
         }
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+
 
 @Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
-    JobfiyTheme {
-        Greeting("Android")
-    }
+fun JobfiyPreview() {
+    JobfiyApp()
 }

@@ -41,23 +41,46 @@ fun SignUpScreen(navController: NavController, loginViewModel: LoginViewModel = 
             NormalTextComponent("Hey there,")
             HeadingTextComponent("Create an account")
 
-            TextFieldComponent("First Name", painterResource(id = R.drawable.person_asset), onTextSelected = {
-                loginViewModel.onEvent(UiEvent.FirstNameChanged(it))
-            })
-            TextFieldComponent("Last Name",painterResource(id = R.drawable.person_asset), onTextSelected = {
-                loginViewModel.onEvent(UiEvent.LastNameChanged(it))
-            })
-            TextFieldComponent("Email",painterResource(id = R.drawable.email_asset), onTextSelected = {
-                loginViewModel.onEvent(UiEvent.EmailChanged(it))
-            })
-            PasswordTextFieldComponent("Password", false, onTextSelected = {
-                loginViewModel.onEvent(UiEvent.PasswordChanged(it))
-            })
-            PasswordTextFieldComponent("Confirm Password", true, onTextSelected = {
-                loginViewModel.onEvent(UiEvent.ConfirmPasswordChanged(it))
-            })
+            TextFieldComponent(
+                "First Name", painterResource(id = R.drawable.person_asset), onTextSelected = {
+                    loginViewModel.onEvent(UiEvent.FirstNameChanged(it))
+                },
+                errorStatus = loginViewModel.registrationUiState.value.firstNameError,
+                errorMessage = loginViewModel.registrationUiState.value.nameErrorMessage,
+
+            )
+            TextFieldComponent(
+                "Last Name", painterResource(id = R.drawable.person_asset), onTextSelected = {
+                    loginViewModel.onEvent(UiEvent.LastNameChanged(it))
+                },
+                errorStatus = loginViewModel.registrationUiState.value.lastNameError,
+                errorMessage = loginViewModel.registrationUiState.value.nameErrorMessage
+            )
+            TextFieldComponent(
+                "Email", painterResource(id = R.drawable.email_asset), onTextSelected = {
+                    loginViewModel.onEvent(UiEvent.EmailChanged(it))
+                },
+                errorStatus = loginViewModel.registrationUiState.value.emailError,
+                errorMessage = loginViewModel.registrationUiState.value.emailErrorMessage
+            )
+            PasswordTextFieldComponent(
+                "Password", false, onTextSelected = {
+                    loginViewModel.onEvent(UiEvent.PasswordChanged(it))
+                },
+                errorStatus = loginViewModel.registrationUiState.value.passwordError,
+                errorMessage = loginViewModel.registrationUiState.value.passwordErrorMessage
+            )
+            PasswordTextFieldComponent(
+                "Confirm Password", true, onTextSelected = {
+                    loginViewModel.onEvent(UiEvent.ConfirmPasswordChanged(it))
+                },
+                errorStatus = loginViewModel.registrationUiState.value.confirmPasswordError,
+                errorMessage = loginViewModel.registrationUiState.value.confirmPasswordErrorMessage
+            )
             Spacer(modifier = Modifier.heightIn(80.dp))
-            ButtonComponent("Sign Up")
+            ButtonComponent("Sign Up") {
+                loginViewModel.onEvent(UiEvent.RegisterButtonClicked)
+            }
             Spacer(modifier = Modifier.heightIn(10.dp))
             DividerTextComponent()
             Spacer(modifier = Modifier.heightIn(10.dp))

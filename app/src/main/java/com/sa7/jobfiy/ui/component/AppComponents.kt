@@ -4,6 +4,7 @@ package com.sa7.jobfiy.ui.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -17,6 +18,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -48,7 +51,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import com.sa7.jobfiy.R
 import com.sa7.jobfiy.ui.theme.Purple40
 import com.sa7.jobfiy.ui.theme.PurpleGrey40
@@ -88,94 +90,132 @@ fun HeadingTextComponent(value: String) {
 }
 
 @Composable
-fun TextFieldComponent(labelValue: String, icon: Painter, onTextSelected: (String) -> Unit) {
+fun TextFieldComponent(labelValue: String, icon: Painter, onTextSelected: (String) -> Unit,
+                       errorStatus: Boolean,
+                       errorMessage: String? = null) {
     val textValue = remember { mutableStateOf("") }
-    OutlinedTextField(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 8.dp)
-            .clip(MaterialTheme.shapes.small),
-        value = textValue.value,
-        onValueChange = {
-            textValue.value = it
-            onTextSelected(it)
-        },
-        label = { Text(text = labelValue) },
-        // display keyboard
-        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-        singleLine = true,
-        maxLines = 1,
-        leadingIcon = {
-            Icon(
-                painter = icon,
-                contentDescription = null,
-                tint = PurpleGrey40
+    Column {
+        OutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp)
+                .clip(MaterialTheme.shapes.small),
+            value = textValue.value,
+            onValueChange = {
+                textValue.value = it
+                onTextSelected(it)
+            },
+            label = { Text(text = labelValue) },
+            // display keyboard
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+            maxLines = 1,
+            isError = errorStatus,
+            leadingIcon = {
+                Icon(
+                    painter = icon,
+                    contentDescription = null,
+                    tint = PurpleGrey40
+                )
+            },
+            trailingIcon = {
+                if (errorStatus)
+                    Icon(
+                        Icons.Filled.Warning,
+                        contentDescription = "Error",
+                        tint = MaterialTheme.colorScheme.error
+                    )
+            },
+        )
+        if (errorStatus && errorMessage != null) {
+            Text(
+                text = errorMessage,
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier.padding(start = 16.dp)
             )
-        },
-    )
-}
+        }
+    }
+
+    }
+
 
 @Composable
 fun PasswordTextFieldComponent(
     labelValue: String,
     isDone: Boolean = true,
-    onTextSelected: (String) -> Unit
+    onTextSelected: (String) -> Unit,
+    errorStatus: Boolean,
+    errorMessage: String? = null
 ) {
     val passwordTextValue = remember { mutableStateOf("") }
     val passwordVisibility = remember { mutableStateOf(false) }
     val localFocusManager = LocalFocusManager.current
-    OutlinedTextField(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 8.dp)
-            .clip(MaterialTheme.shapes.small),
-        value = passwordTextValue.value,
-        onValueChange = {
-            passwordTextValue.value = it
-            onTextSelected(it)
-        },
-        label = { Text(text = labelValue) },
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Password,
-            imeAction =
-            if (isDone) ImeAction.Done else
-                ImeAction.Next
-        ),
-        keyboardActions = if (isDone) {
-            KeyboardActions {
-                localFocusManager.clearFocus()
-            }
-        } else {
-            KeyboardActions.Default
-        },
-        singleLine = true,
-        maxLines = 1,
-        trailingIcon = {
-            val iconImage = if (passwordVisibility.value) {
-                R.drawable.visibility_asset
+    Column {
+        OutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp)
+                .clip(MaterialTheme.shapes.small),
+            value = passwordTextValue.value,
+            onValueChange = {
+                passwordTextValue.value = it
+                onTextSelected(it)
+            },
+            label = { Text(text = labelValue) },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Password,
+                imeAction =
+                if (isDone) ImeAction.Done else
+                    ImeAction.Next
+            ),
+            keyboardActions = if (isDone) {
+                KeyboardActions {
+                    localFocusManager.clearFocus()
+                }
             } else {
-                R.drawable.visibility_off_asset
+                KeyboardActions.Default
+            },
+            singleLine = true,
+            maxLines = 1,
+            isError = errorStatus,
+            trailingIcon = {
+                val iconImage = if (passwordVisibility.value) {
+                    R.drawable.visibility_asset
+                } else {
+                    R.drawable.visibility_off_asset
+                }
+                IconButton(onClick = { passwordVisibility.value = !passwordVisibility.value }) {
+                    Icon(
+                        painter = painterResource(id = iconImage),
+                        contentDescription = null,
+                        tint = PurpleGrey40
+                    )
+                }
+            },
+            visualTransformation = if (passwordVisibility.value) {
+                VisualTransformation.None
+            } else {
+                PasswordVisualTransformation()
             }
-            IconButton(onClick = { passwordVisibility.value = !passwordVisibility.value }) {
-                Icon(
-                    painter = painterResource(id = iconImage),
-                    contentDescription = null,
-                    tint = PurpleGrey40
-                )
-            }
-        },
-        visualTransformation = if (passwordVisibility.value) {
-            VisualTransformation.None
-        } else {
-            PasswordVisualTransformation()
+        )
+        if (errorStatus && errorMessage != null) {
+            Text(
+                text = errorMessage,
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier.padding(start = 16.dp)
+            )
         }
-    )
+    }
+
 }
 
 @Composable
-fun ButtonComponent(value: String) {
+fun ButtonComponent(value: String, onClickButton: () -> Unit) {
     Button(
-        onClick = {},
+        onClick = {
+            onClickButton.invoke()
+        },
         modifier = Modifier
             .fillMaxWidth()
             .heightIn(48.dp),

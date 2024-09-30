@@ -44,14 +44,21 @@ fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel = v
 
             TextFieldComponent("Email", painterResource(id = R.drawable.email_asset), onTextSelected = {
                 loginViewModel.onEvent(UiEvent.EmailChanged(it))
-            })
+            },
+                errorStatus = loginViewModel.registrationUiState.value.emailError
+            )
             PasswordTextFieldComponent("Password", true, onTextSelected = {
                 loginViewModel.onEvent(UiEvent.PasswordChanged(it))
-            })
+            },
+                errorStatus = loginViewModel.registrationUiState.value.passwordError
+            )
             Spacer(modifier = Modifier.heightIn(10.dp))
             UnderlinedTextComponent("Forgot your password") { }
             Spacer(modifier = Modifier.heightIn(80.dp))
-            ButtonComponent("Login")
+            // not handled yet!!
+            ButtonComponent("Login") {
+                loginViewModel.onEvent(UiEvent.RegisterButtonClicked)
+            }
             Spacer(modifier = Modifier.heightIn(10.dp))
             DividerTextComponent()
             Spacer(modifier = Modifier.heightIn(10.dp))

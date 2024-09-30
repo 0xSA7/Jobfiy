@@ -12,8 +12,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.sa7.jobfiy.R
+import com.sa7.jobfiy.data.LoginViewModel
+import com.sa7.jobfiy.data.UiEvent
 import com.sa7.jobfiy.ui.component.ButtonComponent
 import com.sa7.jobfiy.ui.component.ClickableTextComponent
 import com.sa7.jobfiy.ui.component.DividerTextComponent
@@ -25,7 +28,7 @@ import com.sa7.jobfiy.ui.component.TextFieldComponent
 import com.sa7.jobfiy.ui.component.UnderlinedTextComponent
 
 @Composable
-fun LoginScreen(navController: NavController) {
+fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel = viewModel()) {
     Surface(
         color = Color.White,
         modifier = Modifier
@@ -39,10 +42,14 @@ fun LoginScreen(navController: NavController) {
             NormalTextComponent("Welcome back,")
             HeadingTextComponent("Login to your account")
 
-            TextFieldComponent("Email", painterResource(id = R.drawable.email_asset))
-            PasswordTextFieldComponent("Password")
+            TextFieldComponent("Email", painterResource(id = R.drawable.email_asset), onTextSelected = {
+                loginViewModel.onEvent(UiEvent.EmailChanged(it))
+            })
+            PasswordTextFieldComponent("Password", true, onTextSelected = {
+                loginViewModel.onEvent(UiEvent.PasswordChanged(it))
+            })
             Spacer(modifier = Modifier.heightIn(10.dp))
-            UnderlinedTextComponent("Forgot Password") { }
+            UnderlinedTextComponent("Forgot your password") { }
             Spacer(modifier = Modifier.heightIn(80.dp))
             ButtonComponent("Login")
             Spacer(modifier = Modifier.heightIn(10.dp))

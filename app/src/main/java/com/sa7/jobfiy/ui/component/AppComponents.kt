@@ -88,7 +88,7 @@ fun HeadingTextComponent(value: String) {
 }
 
 @Composable
-fun TextFieldComponent(labelValue: String, icon: Painter) {
+fun TextFieldComponent(labelValue: String, icon: Painter, onTextSelected: (String) -> Unit) {
     val textValue = remember { mutableStateOf("") }
     OutlinedTextField(
         modifier = Modifier
@@ -96,7 +96,10 @@ fun TextFieldComponent(labelValue: String, icon: Painter) {
             .padding(top = 8.dp)
             .clip(MaterialTheme.shapes.small),
         value = textValue.value,
-        onValueChange = { textValue.value = it },
+        onValueChange = {
+            textValue.value = it
+            onTextSelected(it)
+        },
         label = { Text(text = labelValue) },
         // display keyboard
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
@@ -113,7 +116,11 @@ fun TextFieldComponent(labelValue: String, icon: Painter) {
 }
 
 @Composable
-fun PasswordTextFieldComponent(labelValue: String, isDone: Boolean = true) {
+fun PasswordTextFieldComponent(
+    labelValue: String,
+    isDone: Boolean = true,
+    onTextSelected: (String) -> Unit
+) {
     val passwordTextValue = remember { mutableStateOf("") }
     val passwordVisibility = remember { mutableStateOf(false) }
     val localFocusManager = LocalFocusManager.current
@@ -123,20 +130,24 @@ fun PasswordTextFieldComponent(labelValue: String, isDone: Boolean = true) {
             .padding(top = 8.dp)
             .clip(MaterialTheme.shapes.small),
         value = passwordTextValue.value,
-        onValueChange = { passwordTextValue.value = it },
+        onValueChange = {
+            passwordTextValue.value = it
+            onTextSelected(it)
+        },
         label = { Text(text = labelValue) },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password,
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Password,
             imeAction =
             if (isDone) ImeAction.Done else
-                ImeAction.Next),
-            keyboardActions = if(isDone)
-            {
-                KeyboardActions{
+                ImeAction.Next
+        ),
+        keyboardActions = if (isDone) {
+            KeyboardActions {
                 localFocusManager.clearFocus()
             }
         } else {
             KeyboardActions.Default
-            },
+        },
         singleLine = true,
         maxLines = 1,
         trailingIcon = {
@@ -163,16 +174,21 @@ fun PasswordTextFieldComponent(labelValue: String, isDone: Boolean = true) {
 
 @Composable
 fun ButtonComponent(value: String) {
-    Button(onClick = {}, modifier = Modifier
+    Button(
+        onClick = {},
+        modifier = Modifier
             .fillMaxWidth()
             .heightIn(48.dp),
-        contentPadding = PaddingValues(), colors = ButtonDefaults.buttonColors(Color.Transparent),) {
+        contentPadding = PaddingValues(), colors = ButtonDefaults.buttonColors(Color.Transparent),
+    ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .heightIn(48.dp)
-                .background(brush = Brush.horizontalGradient(listOf(Purple40, PurpleGrey40)),
-                    shape = RoundedCornerShape(50.dp)),
+                .background(
+                    brush = Brush.horizontalGradient(listOf(Purple40, PurpleGrey40)),
+                    shape = RoundedCornerShape(50.dp)
+                ),
             contentAlignment = Alignment.Center
         ) {
             Text(
@@ -189,9 +205,11 @@ fun ButtonComponent(value: String) {
 }
 
 @Composable
-fun DividerTextComponent(){
-    Row (modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically) {
+fun DividerTextComponent() {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         HorizontalDivider(
             modifier = Modifier
                 .fillMaxWidth()
@@ -200,7 +218,8 @@ fun DividerTextComponent(){
             thickness = 1.dp
         )
 
-        Text(text = "OR",
+        Text(
+            text = "OR",
             style = TextStyle(
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Normal,

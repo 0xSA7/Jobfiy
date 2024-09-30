@@ -12,8 +12,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.sa7.jobfiy.R
+import com.sa7.jobfiy.data.LoginViewModel
+import com.sa7.jobfiy.data.UiEvent
 import com.sa7.jobfiy.ui.component.ButtonComponent
 import com.sa7.jobfiy.ui.component.ClickableTextComponent
 import com.sa7.jobfiy.ui.component.DividerTextComponent
@@ -24,7 +27,7 @@ import com.sa7.jobfiy.ui.component.TextFieldComponent
 import com.sa7.jobfiy.ui.component.NormalTextComponent
 
 @Composable
-fun SignUpScreen(navController: NavController) {
+fun SignUpScreen(navController: NavController, loginViewModel: LoginViewModel = viewModel()) {
     Surface(
         color = Color.White,
         modifier = Modifier
@@ -38,11 +41,21 @@ fun SignUpScreen(navController: NavController) {
             NormalTextComponent("Hey there,")
             HeadingTextComponent("Create an account")
 
-            TextFieldComponent("First Name", painterResource(id = R.drawable.person_asset))
-            TextFieldComponent("Last Name",painterResource(id = R.drawable.person_asset))
-            TextFieldComponent("Email",painterResource(id = R.drawable.email_asset))
-            PasswordTextFieldComponent("Password", false)
-            PasswordTextFieldComponent("Confirm Password")
+            TextFieldComponent("First Name", painterResource(id = R.drawable.person_asset), onTextSelected = {
+                loginViewModel.onEvent(UiEvent.FirstNameChanged(it))
+            })
+            TextFieldComponent("Last Name",painterResource(id = R.drawable.person_asset), onTextSelected = {
+                loginViewModel.onEvent(UiEvent.LastNameChanged(it))
+            })
+            TextFieldComponent("Email",painterResource(id = R.drawable.email_asset), onTextSelected = {
+                loginViewModel.onEvent(UiEvent.EmailChanged(it))
+            })
+            PasswordTextFieldComponent("Password", false, onTextSelected = {
+                loginViewModel.onEvent(UiEvent.PasswordChanged(it))
+            })
+            PasswordTextFieldComponent("Confirm Password", true, onTextSelected = {
+                loginViewModel.onEvent(UiEvent.ConfirmPasswordChanged(it))
+            })
             Spacer(modifier = Modifier.heightIn(80.dp))
             ButtonComponent("Sign Up")
             Spacer(modifier = Modifier.heightIn(10.dp))

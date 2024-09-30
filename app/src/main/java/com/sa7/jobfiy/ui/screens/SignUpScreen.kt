@@ -41,7 +41,7 @@ fun SignUpScreen(navController: NavController) {
             TextFieldComponent("First Name", painterResource(id = R.drawable.person_asset))
             TextFieldComponent("Last Name",painterResource(id = R.drawable.person_asset))
             TextFieldComponent("Email",painterResource(id = R.drawable.email_asset))
-            PasswordTextFieldComponent("Password")
+            PasswordTextFieldComponent("Password", false)
             PasswordTextFieldComponent("Confirm Password")
             Spacer(modifier = Modifier.heightIn(80.dp))
             ButtonComponent("Sign Up")

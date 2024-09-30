@@ -22,6 +22,7 @@ import com.sa7.jobfiy.ui.component.HeadingTextComponent
 import com.sa7.jobfiy.ui.component.NormalTextComponent
 import com.sa7.jobfiy.ui.component.PasswordTextFieldComponent
 import com.sa7.jobfiy.ui.component.TextFieldComponent
+import com.sa7.jobfiy.ui.component.UnderlinedTextComponent
 
 @Composable
 fun LoginScreen(navController: NavController) {
@@ -40,6 +41,8 @@ fun LoginScreen(navController: NavController) {
 
             TextFieldComponent("Email", painterResource(id = R.drawable.email_asset))
             PasswordTextFieldComponent("Password")
+            Spacer(modifier = Modifier.heightIn(10.dp))
+            UnderlinedTextComponent("Forgot Password") { }
             Spacer(modifier = Modifier.heightIn(80.dp))
             ButtonComponent("Login")
             Spacer(modifier = Modifier.heightIn(10.dp))

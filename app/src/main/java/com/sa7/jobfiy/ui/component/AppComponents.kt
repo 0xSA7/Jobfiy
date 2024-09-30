@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -33,15 +34,18 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -95,7 +99,9 @@ fun TextFieldComponent(labelValue: String, icon: Painter) {
         onValueChange = { textValue.value = it },
         label = { Text(text = labelValue) },
         // display keyboard
-        keyboardOptions = KeyboardOptions.Default,
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+        singleLine = true,
+        maxLines = 1,
         leadingIcon = {
             Icon(
                 painter = icon,
@@ -107,9 +113,10 @@ fun TextFieldComponent(labelValue: String, icon: Painter) {
 }
 
 @Composable
-fun PasswordTextFieldComponent(labelValue: String) {
+fun PasswordTextFieldComponent(labelValue: String, isDone: Boolean = true) {
     val passwordTextValue = remember { mutableStateOf("") }
     val passwordVisibility = remember { mutableStateOf(false) }
+    val localFocusManager = LocalFocusManager.current
     OutlinedTextField(
         modifier = Modifier
             .fillMaxWidth()
@@ -118,8 +125,20 @@ fun PasswordTextFieldComponent(labelValue: String) {
         value = passwordTextValue.value,
         onValueChange = { passwordTextValue.value = it },
         label = { Text(text = labelValue) },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password,
+            imeAction =
+            if (isDone) ImeAction.Done else
+                ImeAction.Next),
+            keyboardActions = if(isDone)
+            {
+                KeyboardActions{
+                localFocusManager.clearFocus()
+            }
+        } else {
+            KeyboardActions.Default
+            },
+        singleLine = true,
+        maxLines = 1,
         trailingIcon = {
             val iconImage = if (passwordVisibility.value) {
                 R.drawable.visibility_asset
@@ -248,17 +267,38 @@ fun GoogleButtonComponent() {
 fun ClickableTextComponent(value: String, onClickButton: () -> Unit) {
     Box(
         modifier = Modifier.fillMaxWidth(),
-        contentAlignment = Alignment.Center // Center the content horizontally
+        contentAlignment = Alignment.Center
     ) {
         ClickableText(
             text = AnnotatedString(value),
-            onClick = { onClickButton() }, // Invoke the onClickButton function properly
+            onClick = { onClickButton() },
             modifier = Modifier
                 .padding(top = 16.dp),
             style = TextStyle(
                 fontSize = 16.sp,
                 color = Purple40,
-                textAlign = TextAlign.Center // Center the text within the ClickableText
+                textAlign = TextAlign.Center
+            )
+        )
+    }
+}
+
+@Composable
+fun UnderlinedTextComponent(value: String, onClickButton: () -> Unit) {
+    Box(
+        modifier = Modifier.fillMaxWidth(),
+        contentAlignment = Alignment.Center
+    ) {
+        ClickableText(
+            text = AnnotatedString(value),
+            onClick = { onClickButton() },
+            modifier = Modifier
+                .padding(top = 16.dp),
+            style = TextStyle(
+                fontSize = 16.sp,
+                color = Purple40,
+                textAlign = TextAlign.Center,
+                textDecoration = TextDecoration.Underline
             )
         )
     }

@@ -16,10 +16,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -101,7 +101,12 @@ fun JobCard() {
 
             Column {
                 Text("Mansoura, Dakahlia, Egypt", color = Color.Black, fontSize = 14.sp)
-                Text("Posted from 7 days", color = Color.Gray, fontSize = 12.sp , fontWeight = FontWeight.Bold)
+                Text(
+                    "Posted from 7 days",
+                    color = Color.Gray,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold
+                )
             }
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -110,18 +115,22 @@ fun JobCard() {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End
             ) {
-                Button(
+                ElevatedButton(
                     onClick = { },
                     shape = RoundedCornerShape(16.dp),
-                    colors = ButtonDefaults.buttonColors(Color.White),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Perpi,
+                        contentColor = Color.White
+                    ),
                     border = BorderStroke(1.dp, Color.Gray)
                 ) {
-                    Text("Explore!", color = Color.Black)
+                    Text("Explore!")
                 }
             }
         }
     }
 }
+
 @Composable
 fun JobTag(text: String) {
     Box(
@@ -129,7 +138,7 @@ fun JobTag(text: String) {
             .border(BorderStroke(1.dp, Color.Gray), RoundedCornerShape(16.dp))
             .padding(horizontal = 8.dp, vertical = 4.dp)
     ) {
-        Text(text, color = Color.Gray, fontSize = 12.sp)
+        Text(text, color = Perpi, fontSize = 12.sp , fontWeight = FontWeight.SemiBold)
     }
 }
 

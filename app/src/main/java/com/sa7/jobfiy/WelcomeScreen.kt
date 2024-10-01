@@ -1,4 +1,7 @@
 package com.sa7.jobfiy
+
+import DropdownMenuComponentWithLabel
+import FilePickerTextField
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -27,12 +30,25 @@ class WelcomeScreen : ComponentActivity() {
 
 @Composable
 fun JobApplicationScreen() {
+    val options = listOf(
+        "Software Engineer",
+        "Product Manager",
+        "Data Scientist",
+        "UX Designer",
+        "Mobile App Developer",
+        "DevOps Engineer",
+        "System Administrator",
+        "Quality Assurance Engineer",
+        "Technical Support Specialist",
+        "Database Administrator"
+    )
     var JopTitle by remember { mutableStateOf("") }
     var firstName by remember { mutableStateOf("") }
     var secondName by remember { mutableStateOf("") }
     var phoneNumber by remember { mutableStateOf("") }
     var resume by remember { mutableStateOf("") }
     var details by remember { mutableStateOf("") }
+    var selectedOption by remember { mutableStateOf("Choose an option") }
 
     Surface(
         modifier = Modifier
@@ -69,7 +85,7 @@ fun JobApplicationScreen() {
                     fontSize = 15.sp,
                     color = Color.Gray
                 ),
-               // modifier = Modifier.padding(horizontal = 16.dp) // Ensure proper spacing
+                // modifier = Modifier.padding(horizontal = 16.dp) // Ensure proper spacing
             )
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -101,6 +117,17 @@ fun JobApplicationScreen() {
             )
             Spacer(modifier = Modifier.height(8.dp))
 
+            DropdownMenuComponentWithLabel(
+                options = options,
+                label = "Jop Title",
+                dropdownLabel = "Jop Title", // Custom label for the dropdown
+                onOptionSelected = { selectedOption ->
+                    // Handle the selected option here
+                    println("Selected option: $selectedOption")
+                }
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+
             CustomTextField(
                 value = JopTitle,
                 onValueChange = { JopTitle = it },
@@ -111,12 +138,19 @@ fun JobApplicationScreen() {
             Spacer(modifier = Modifier.height(8.dp))
 
             // Resume Text Field
-            CustomTextField(
-                value = resume,
-                onValueChange = { resume = it },
-                label = "Resume",
-                placeholder = "CV (Optional for now)"
+
+            FilePickerTextField(
+                label = "Upload Resume",
+                onFileSelected = { uri ->
+                    // Handle the selected file URI
+                    if (uri != null) {
+                        println("Selected file URI: $uri")
+                    } else {
+                        println("No file selected")
+                    }
+                }
             )
+
             Spacer(modifier = Modifier.height(8.dp))
 
             // Details Text Field (multiline)
@@ -149,5 +183,3 @@ fun JobApplicationScreen() {
         }
     }
 }
-
-

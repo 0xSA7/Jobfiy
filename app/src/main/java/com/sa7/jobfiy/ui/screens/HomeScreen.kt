@@ -1,4 +1,5 @@
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -25,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -32,54 +35,61 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStoreOwner
 import com.sa7.jobfiy.R
 import com.sa7.jobfiy.ui.commonUi.JobCard
+import com.sa7.jobfiy.ui.screens.HomeScreenViewModel
 import com.sa7.jobfiy.ui.theme.Perpi
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun JobifyScreen() {
-
+    val viewModel: HomeScreenViewModel =
+        ViewModelProvider(LocalContext.current as ViewModelStoreOwner).get(HomeScreenViewModel::class.java)
+   viewModel.getJobsForCard()
+    val jobs = viewModel.data.observeAsState().value?.data
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
     ) {
         JobifyAppBar()
-
         WelcomeSection(userName = "Khaled")
-
-
         SearchBar()
-
 
         Text(
             text = "Jobs based on your profile",
             modifier = Modifier
                 .padding(horizontal = 16.dp, vertical = 8.dp),
             fontWeight = FontWeight.Bold
-
         )
 
-        // Scrollable list of jobs
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 16.dp),
-            contentPadding = PaddingValues(bottom = 16.dp)
-        ) {
-            items(15) {
-                JobCard()
-                Spacer(modifier = Modifier.height(12.dp))
+        // Show jobs or empty state
+        if (jobs.isNullOrEmpty()) {
+            Text(text = "No jobs available", modifier = Modifier.padding(16.dp))
+        } else {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp),
+                contentPadding = PaddingValues(bottom = 16.dp)
+            ) {
+                items(jobs) { job ->
+                    JobCard(job)
+                    Spacer(modifier = Modifier.height(12.dp))
+                }
             }
         }
     }
 }
+
 
 @Composable
 fun JobifyAppBar() {
@@ -90,10 +100,10 @@ fun JobifyAppBar() {
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-     Image(
-         painter = painterResource(id = R.drawable.jobfiy),
-                 contentDescription = "User Image"
-     )
+        Image(
+            painter = painterResource(id = R.drawable.jobfiy),
+            contentDescription = "User Image"
+        )
 
         Row {
             IconButton(onClick = { }) {
@@ -136,10 +146,10 @@ fun WelcomeSection(userName: String) {
             Column {
                 Text(
                     text = "Welcome, $userName!",
-                   color = Perpi,
-                        fontWeight = FontWeight.Bold,
+                    color = Perpi,
+                    fontWeight = FontWeight.Bold,
                     fontSize = 20.sp
-                    )
+                )
 
                 Text(
                     text = "Let’s search for your job",
@@ -151,7 +161,6 @@ fun WelcomeSection(userName: String) {
 
     }
 }
-
 
 @Composable
 fun SearchBar() {
@@ -165,12 +174,11 @@ fun SearchBar() {
         var text by remember { mutableStateOf("") }
         OutlinedTextField(
             value = text,
-            onValueChange = { text = it},
+            onValueChange = { text = it },
             shape = RoundedCornerShape(16.dp),
             modifier = Modifier
                 .fillMaxWidth()
-                .border(2.dp , Color.Gray, RoundedCornerShape(16.dp))
-            ,
+                .border(2.dp, Color.Gray, RoundedCornerShape(16.dp)),
             placeholder = { Text(text = "Search a job") },
             leadingIcon = {
                 Icon(

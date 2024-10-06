@@ -26,16 +26,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberAsyncImagePainter
+import coil.compose.rememberImagePainter
 import com.sa7.jobfiy.R
+import com.sa7.jobfiy.api.JobData
 import com.sa7.jobfiy.ui.theme.Perpi
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 @Composable
-fun JobCard() {
+fun JobCard(job: JobData) {
+   //val imagePainter = rememberAsyncImagePainter(job.employer.logoUrl)
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -56,7 +65,7 @@ fun JobCard() {
             ) {
                 Row {
                     Image(
-                        painter = painterResource(R.drawable.ic_launcher_background), // Replace with your logo resource
+                        painter =painterResource(id = R.drawable.ic_launcher_background), // Replace with your logo resource
                         contentDescription = "Company Logo",
                         modifier = Modifier
                             .size(48.dp)
@@ -67,16 +76,27 @@ fun JobCard() {
                     Spacer(modifier = Modifier.width(8.dp))
 
                     Column {
-                        Text("Meta", fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                        Text("Dev ops Company", color = Color.Black, fontSize = 14.sp)
+                        Text("Meta", fontWeight = FontWeight.Bold, fontSize = 18.sp)///qqqq
+                        Text("Dev ops Company", color = Color.Black, fontSize = 14.sp)///qqqq
                     }
                 }
 
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    JobTag(text = "On site")
-                    JobTag(text = "Full Time")
+
+                    JobTag(text = {
+                        if (!job.remote)
+                            "On Site"
+                        else
+                            "Remote"
+                    }.toString())
+                    JobTag(text = {
+                        if (job.jobTypes.size > 1)
+                            "${job.jobTypes.size + 1} Options"
+                        else
+                            job.jobTypes.get(0)
+                    }.toString())//qqq
                 }
             }
 
@@ -90,7 +110,7 @@ fun JobCard() {
                     .padding(8.dp)
             ) {
                 Text(
-                    text = "Senior Software Tester",
+                    text = job.jobTitle,
                     color = Color.White,
                     modifier = Modifier.align(Alignment.Center)
                 )
@@ -100,8 +120,17 @@ fun JobCard() {
             Spacer(modifier = Modifier.height(8.dp))
 
             Column {
-                Text("Mansoura, Dakahlia, Egypt", color = Color.Black, fontSize = 14.sp)
-                Text("Posted from 7 days", color = Color.Gray, fontSize = 12.sp , fontWeight = FontWeight.Bold)
+                Text(
+                    "${job.location.city}, ${job.location.streetAddress}, ${job.country}",
+                    color = Color.Black,
+                    fontSize = 14.sp
+                )
+                Text(
+                    "Posted from ${formatTimeFromMilliseconds(job.datePublished)}",
+                    color = Color.Gray,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold
+                )
             }
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -111,7 +140,9 @@ fun JobCard() {
                 horizontalArrangement = Arrangement.End
             ) {
                 Button(
-                    onClick = { },
+                    onClick = {
+                        //go to description page
+                    },
                     shape = RoundedCornerShape(16.dp),
                     colors = ButtonDefaults.buttonColors(Color.White),
                     border = BorderStroke(1.dp, Color.Gray)
@@ -122,6 +153,7 @@ fun JobCard() {
         }
     }
 }
+
 @Composable
 fun JobTag(text: String) {
     Box(
@@ -136,5 +168,17 @@ fun JobTag(text: String) {
 @Preview(showSystemUi = true)
 @Composable
 private fun JobCardPreview() {
-    JobCard()
+//
+}
+fun formatTimeFromMilliseconds(milliseconds: Long): String {
+    val localDateTime = Instant.ofEpochMilli(milliseconds)
+        .atZone(ZoneId.systemDefault())
+        .toLocalDateTime()
+    val currentDateTime = LocalDateTime.now()
+    val difference = currentDateTime.minusDays(7)
+    if (localDateTime.isAfter(difference)) {
+        return localDateTime.format(DateTimeFormatter.ofPattern("HH:mm"))
+    } else {
+        return localDateTime.format(DateTimeFormatter.ofPattern("MMM dd, yyyy HH:mm"))
+    }
 }

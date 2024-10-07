@@ -83,6 +83,7 @@ fun JobifyScreen() {
                 contentPadding = PaddingValues(bottom = 16.dp)
             ) {
                 items(jobs) { job ->
+                    Log.d("JobifyScreen", "Job: $job")
                     JobCard(job)
                     Spacer(modifier = Modifier.height(12.dp))
                 }

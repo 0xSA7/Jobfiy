@@ -93,7 +93,7 @@ fun JobCard(job: JobSearch) {
 //                    }.toString())
 //                    JobTag(text = {
 //                        if (job.jobTypes.size > 1)
-//                            "${job.jobTypes.size + 1} Options"
+//                            "${job.jobTypes.size} Options"
 //                        else
 //                            job.jobTypes.get(0)
 //                    }.toString())//qqq

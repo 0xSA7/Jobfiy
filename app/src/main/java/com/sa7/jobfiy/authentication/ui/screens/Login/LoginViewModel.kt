@@ -4,6 +4,8 @@ import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.sa7.jobfiy.authentication.Validator
@@ -124,5 +126,18 @@ class LoginViewModel : ViewModel() {
                 }
         }
 
+    }
+
+    private val isUserLoggedIn = MutableLiveData<Boolean>()
+    val isUserLoggedInLiveData: LiveData<Boolean> = isUserLoggedIn
+    private val emailId = MutableLiveData<String>()
+    val emailIdLiveData: LiveData<String> = emailId
+
+    // Check if the user is already logged in
+    fun checkUserLoggedIn() {
+        FirebaseAuth.getInstance().currentUser?.let {
+            emailId.value = it.email
+            isUserLoggedIn.value = true
+        }
     }
 }

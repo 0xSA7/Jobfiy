@@ -1,4 +1,4 @@
-package com.sa7.jobfiy.authentication.ui.screens.ResetPassword
+package com.sa7.jobfiy.authentication.ui.screens.resetPassword
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -19,8 +19,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sa7.jobfiy.R
 import com.sa7.jobfiy.authentication.ui.component.ButtonComponent
 import com.sa7.jobfiy.authentication.ui.component.TextFieldComponent
-import com.sa7.jobfiy.authentication.ui.screens.Login.LoginUiEvent
-import com.sa7.jobfiy.authentication.ui.screens.Login.LoginViewModel
+import com.sa7.jobfiy.authentication.ui.screens.login.LoginUiEvent
+import com.sa7.jobfiy.authentication.ui.screens.login.LoginViewModel
 
 @Composable
 fun ResetPasswordScreen(loginViewModel: LoginViewModel = viewModel()) {

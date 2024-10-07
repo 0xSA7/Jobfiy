@@ -1,8 +1,7 @@
-package com.sa7.jobfiy.authentication.ui.screens.Login
+package com.sa7.jobfiy.authentication.ui.screens.login
 
 import android.content.ContentValues.TAG
 import android.util.Log
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -92,23 +91,44 @@ class LoginViewModel : ViewModel() {
         allValidationPassed.value = email.status
     }
 
-    // login the user to the app using email and password
+    private val isUserLoggedIn = MutableLiveData<Boolean>()
+    val isUserLoggedInLiveData: LiveData<Boolean> = isUserLoggedIn
+    private val emailId = MutableLiveData<String>()
+    val emailIdLiveData: LiveData<String> = emailId
+
     private fun userLogin(email: String, password: String) {
+        // Start login progress
         loginProgress.value = true
-        // Sign in with email and password
-        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
+        val auth = FirebaseAuth.getInstance()
+
+        // Authenticate the user
+        auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    Log.d(TAG, "signInWithEmail:success")
-                    loginProgress.value = false
-
-                    // Navigate to the home screen
-                    AppRoute.navigateTo(Screen.HomeScreen)
+                    // User logged in successfully, now check for email verification
+                    val user = auth.currentUser
+                    if (user != null && user.isEmailVerified) {
+                        // Email is verified, proceed to the next step (e.g., navigate to home screen)
+                        Log.d(TAG, "Login successful. Email is verified.")
+                        loginProgress.value = false
+                        emailId.value = email
+                        isUserLoggedIn.value = true
+                        // Navigate to the next screen
+                        AppRoute.navigateTo(Screen.HomeScreen)
+                    } else {
+                        // Email not verified
+                        Log.w(TAG, "Email not verified. Please verify your email.")
+                        loginProgress.value = false
+                        // Optionally sign out the user
+                        auth.signOut()
+                    }
                 } else {
                     Log.w(TAG, "signInWithEmail:failure", task.exception)
+                    loginProgress.value = false
                 }
             }
     }
+
 
     private fun resetPassword(email: String) {
         // Validate the email
@@ -126,18 +146,5 @@ class LoginViewModel : ViewModel() {
                 }
         }
 
-    }
-
-    private val isUserLoggedIn = MutableLiveData<Boolean>()
-    val isUserLoggedInLiveData: LiveData<Boolean> = isUserLoggedIn
-    private val emailId = MutableLiveData<String>()
-    val emailIdLiveData: LiveData<String> = emailId
-
-    // Check if the user is already logged in
-    fun checkUserLoggedIn() {
-        FirebaseAuth.getInstance().currentUser?.let {
-            emailId.value = it.email
-            isUserLoggedIn.value = true
-        }
     }
 }

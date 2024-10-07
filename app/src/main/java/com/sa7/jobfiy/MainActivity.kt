@@ -7,9 +7,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.sa7.jobfiy.app.JobfiyApp
-import com.sa7.jobfiy.authentication.ui.screens.Login.LoginScreen
-import com.sa7.jobfiy.authentication.ui.screens.ResetPassword.ResetPasswordScreen
-import com.sa7.jobfiy.authentication.ui.screens.SignUp.SignUpScreen
+import com.sa7.jobfiy.authentication.ui.screens.login.LoginScreen
+
 
 
 class MainActivity : ComponentActivity() {
@@ -17,7 +16,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            ResetPasswordScreen()
+            LoginScreen()
         }
     }
 }

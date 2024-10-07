@@ -1,4 +1,4 @@
-package com.sa7.jobfiy.authentication.ui.screens.SignUp
+package com.sa7.jobfiy.authentication.ui.screens.signUp
 
 data class RegistrationUiState(
     // Registration Form Fields and Error Fields for Validation and Error Handling

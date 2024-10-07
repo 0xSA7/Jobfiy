@@ -1,4 +1,4 @@
-package com.sa7.jobfiy.authentication.ui.screens.Login
+package com.sa7.jobfiy.authentication.ui.screens.login
 
 import android.app.Application
 import android.content.Intent

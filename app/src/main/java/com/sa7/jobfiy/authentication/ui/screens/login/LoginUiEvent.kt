@@ -1,4 +1,4 @@
-package com.sa7.jobfiy.authentication.ui.screens.Login
+package com.sa7.jobfiy.authentication.ui.screens.login
 
 sealed class LoginUiEvent {
     // Events that can be triggered by the UI

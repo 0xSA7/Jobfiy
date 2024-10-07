@@ -1,4 +1,4 @@
-package com.sa7.jobfiy.authentication.ui.screens.SignUp
+package com.sa7.jobfiy.authentication.ui.screens.signUp
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

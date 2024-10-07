@@ -1,4 +1,4 @@
-package com.sa7.jobfiy.authentication.ui.screens.SignUp
+package com.sa7.jobfiy.authentication.ui.screens.signUp
 
 sealed class SignUpUiEvent {
     // Events for the SignUp Screen

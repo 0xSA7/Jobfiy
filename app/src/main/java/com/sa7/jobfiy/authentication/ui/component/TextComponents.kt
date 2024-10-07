@@ -18,7 +18,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.sa7.jobfiy.authentication.ui.screens.Login.LoginViewModel
+import com.sa7.jobfiy.authentication.ui.screens.login.LoginViewModel
 import com.sa7.jobfiy.ui.theme.Purple40
 
 

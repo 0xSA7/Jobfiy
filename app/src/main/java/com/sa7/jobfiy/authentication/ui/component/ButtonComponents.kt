@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sa7.jobfiy.R
-import com.sa7.jobfiy.authentication.ui.screens.Login.AuthViewModel
+import com.sa7.jobfiy.authentication.ui.screens.login.AuthViewModel
 import com.sa7.jobfiy.ui.theme.Purple40
 import com.sa7.jobfiy.ui.theme.PurpleGrey40
 

@@ -35,7 +35,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
 import com.sa7.jobfiy.R
-import com.sa7.jobfiy.api.JobData
+import com.sa7.jobfiy.api.JobSearch
 import com.sa7.jobfiy.ui.theme.Perpi
 import java.time.Instant
 import java.time.LocalDateTime
@@ -43,7 +43,7 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 @Composable
-fun JobCard(job: JobData) {
+fun JobCard(job: JobSearch) {
    //val imagePainter = rememberAsyncImagePainter(job.employer.logoUrl)
     Card(
         modifier = Modifier
@@ -76,7 +76,7 @@ fun JobCard(job: JobData) {
                     Spacer(modifier = Modifier.width(8.dp))
 
                     Column {
-                        Text("Meta", fontWeight = FontWeight.Bold, fontSize = 18.sp)///qqqq
+                        Text(job.company_name, fontWeight = FontWeight.Bold, fontSize = 18.sp)///qqqq
                         Text("Dev ops Company", color = Color.Black, fontSize = 14.sp)///qqqq
                     }
                 }
@@ -85,18 +85,18 @@ fun JobCard(job: JobData) {
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
 
-                    JobTag(text = {
-                        if (!job.remote)
-                            "On Site"
-                        else
-                            "Remote"
-                    }.toString())
-                    JobTag(text = {
-                        if (job.jobTypes.size > 1)
-                            "${job.jobTypes.size + 1} Options"
-                        else
-                            job.jobTypes.get(0)
-                    }.toString())//qqq
+//                    JobTag(text = {
+//                        if (!job.remote)
+//                            "On Site"
+//                        else
+//                            "Remote"
+//                    }.toString())
+//                    JobTag(text = {
+//                        if (job.jobTypes.size > 1)
+//                            "${job.jobTypes.size + 1} Options"
+//                        else
+//                            job.jobTypes.get(0)
+//                    }.toString())//qqq
                 }
             }
 
@@ -110,7 +110,7 @@ fun JobCard(job: JobData) {
                     .padding(8.dp)
             ) {
                 Text(
-                    text = job.jobTitle,
+                    text = job.title,
                     color = Color.White,
                     modifier = Modifier.align(Alignment.Center)
                 )
@@ -121,12 +121,12 @@ fun JobCard(job: JobData) {
 
             Column {
                 Text(
-                    "${job.location.city}, ${job.location.streetAddress}, ${job.country}",
+                    "${job.location}, ${job.locality}",
                     color = Color.Black,
                     fontSize = 14.sp
                 )
                 Text(
-                    "Posted from ${formatTimeFromMilliseconds(job.datePublished)}",
+                    "Posted from ${formatTimeFromMilliseconds(job.pub_date_ts_milli)}",
                     color = Color.Gray,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold

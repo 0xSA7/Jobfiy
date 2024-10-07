@@ -54,7 +54,8 @@ fun JobifyScreen() {
     val viewModel: HomeScreenViewModel =
         ViewModelProvider(LocalContext.current as ViewModelStoreOwner).get(HomeScreenViewModel::class.java)
    viewModel.getJobsForCard()
-    val jobs = viewModel.data.observeAsState().value?.data
+    val jobs = viewModel.data.observeAsState().value?.hits
+
     Column(
         modifier = Modifier
             .fillMaxSize()

@@ -8,14 +8,15 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-
+// retrofit builder
 val retrofit = Retrofit.Builder()
-    .baseUrl("https://indeed46.p.rapidapi.com/")
+    .baseUrl("https://indeed12.p.rapidapi.com")
     .addConverterFactory(GsonConverterFactory.create())
     .build()
-
-object IndeedAPI {
+// object to call retrofit job search api
+object JobSearchAPI{
     val call: IndeedApiService by lazy {
         retrofit.create(IndeedApiService::class.java)
     }
 }
+

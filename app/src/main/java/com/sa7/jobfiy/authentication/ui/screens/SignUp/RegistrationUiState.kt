@@ -1,6 +1,7 @@
-package com.sa7.jobfiy.data
+package com.sa7.jobfiy.authentication.ui.screens.SignUp
 
 data class RegistrationUiState(
+    // Registration Form Fields and Error Fields for Validation and Error Handling
     var firstName  : String = "",
     var lastName  : String = "",
     var email  : String = "",

@@ -6,8 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.compose.rememberNavController
-import com.sa7.jobfiy.ui.navigation.AppNavGraph
+import com.sa7.jobfiy.authentication.ui.screens.SignUp.SignUpScreen
 
 
 @Composable
@@ -16,8 +15,7 @@ fun JobfiyApp() {
         modifier = Modifier.fillMaxSize(),
         color = Color.White
     ) {
-        val navController = rememberNavController()
-        AppNavGraph(navController = navController)
+        SignUpScreen()
     }
 }
 

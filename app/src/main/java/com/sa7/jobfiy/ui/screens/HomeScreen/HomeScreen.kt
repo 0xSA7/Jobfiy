@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sa7.jobfiy.R
 import com.sa7.jobfiy.ui.commonUi.JobCard
+import com.sa7.jobfiy.ui.commonUi.JobifyAppBar
 import com.sa7.jobfiy.ui.commonUi.RadioButtonWithText
 import com.sa7.jobfiy.ui.theme.Perpi
 
@@ -235,44 +236,6 @@ fun BottomMenuContent() {
     }
 }
 
-@Composable
-fun JobifyAppBar() {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(20.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.jobfiy),
-            contentDescription = "User Image"
-        )
-
-        Row {
-            IconButton(
-                onClick = { },
-                colors = IconButtonDefaults.iconButtonColors(contentColor = Perpi)
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.notification),
-                    contentDescription = "Notifications",
-                    modifier = Modifier.size(24.dp) // Set consistent icon size
-                )
-            }
-            IconButton(
-                onClick = { },
-                colors = IconButtonDefaults.iconButtonColors(contentColor = Perpi)
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.settings),
-                    contentDescription = "Settings",
-                    modifier = Modifier.size(24.dp) // Set consistent icon size
-                )
-            }
-        }
-    }
-}
 
 @Composable
 fun WelcomeSection(userName: String, screenWidth: Dp) {

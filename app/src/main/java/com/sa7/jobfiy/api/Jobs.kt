@@ -18,7 +18,7 @@ data class JobSearch(
 )
 
 data class Salary(
-    val max: Int,
-    val min: Int,
+    val max: Double,
+    val min: Double,
     val type: String
 )

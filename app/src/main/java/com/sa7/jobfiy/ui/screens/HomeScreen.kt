@@ -50,10 +50,11 @@ import com.sa7.jobfiy.ui.theme.Perpi
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun JobifyScreen() {
-    val viewModel: HomeScreenViewModel =
-        ViewModelProvider(LocalContext.current as ViewModelStoreOwner).get(HomeScreenViewModel::class.java)
-   viewModel.getJobsForCard()
+fun JobifyScreen(viewModel: HomeScreenViewModel) {
+//    val viewModel: HomeScreenViewModel =
+//        ViewModelProvider(LocalContext.current as ViewModelStoreOwner).get(HomeScreenViewModel::class.java)
+//   viewModel.getJobsForCard()
+
     val jobs = viewModel.data.observeAsState().value?.hits
 
     Column(
@@ -199,8 +200,8 @@ fun SearchBar() {
     }
 }
 
-@Preview(showSystemUi = true)
-@Composable
-private fun JobifyScreenPreview() {
-    JobifyScreen()
-}
+//@Preview(showSystemUi = true)
+//@Composable
+//private fun JobifyScreenPreview() {
+//    JobifyScreen()
+//}

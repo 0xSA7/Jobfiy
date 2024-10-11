@@ -16,12 +16,12 @@ interface IndeedApiService {
     @GET("jobs/search")
     suspend fun searchJobs(
         @Query("query") query: String,
-        @Query("location") location: String? = null,
-        @Query("page_id") pageId: Int? = null,
-        @Query("locality") locality: String? = "us",
-        @Query("fromage") fromage: Int? = null,
-        @Query("radius") radius: Int? = null,
-        @Query("sort") sort: String? = null
+//        @Query("location") location: String? = null,
+//        @Query("page_id") pageId: Int? = null,
+//        @Query("locality") locality: String? = "us",
+//        @Query("fromage") fromage: Int? = null,
+//        @Query("radius") radius: Int? = null,
+//        @Query("sort") sort: String? = null
     ): Jobs
     @GET("job/{job_id}")
     suspend fun getJobsDetails(

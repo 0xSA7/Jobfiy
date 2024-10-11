@@ -6,7 +6,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 // retrofit builder
 val retrofit = Retrofit.Builder()
-    .baseUrl("https://indeed12.p.rapidapi.com")
+    .baseUrl("https://indeed12.p.rapidapi.com/")
     .addConverterFactory(GsonConverterFactory.create())
     .build()
 // object to call retrofit job search api

@@ -16,26 +16,35 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberAsyncImagePainter
+import coil.compose.rememberImagePainter
 import com.sa7.jobfiy.R
+import com.sa7.jobfiy.api.JobSearch
 import com.sa7.jobfiy.ui.theme.Perpi
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 @Composable
-fun JobCard() {
+fun JobCard(job: JobSearch) {
+   //val imagePainter = rememberAsyncImagePainter(job.employer.logoUrl)
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -56,7 +65,7 @@ fun JobCard() {
             ) {
                 Row {
                     Image(
-                        painter = painterResource(R.drawable.ic_launcher_background), // Replace with your logo resource
+                        painter =painterResource(id = R.drawable.ic_launcher_background), // Replace with your logo resource
                         contentDescription = "Company Logo",
                         modifier = Modifier
                             .size(48.dp)
@@ -67,16 +76,27 @@ fun JobCard() {
                     Spacer(modifier = Modifier.width(8.dp))
 
                     Column {
-                        Text("Meta", fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                        Text("Dev ops Company", color = Color.Black, fontSize = 14.sp)
+                        Text(job.company_name, fontWeight = FontWeight.Bold, fontSize = 18.sp)///qqqq
+                        Text("Dev ops Company", color = Color.Black, fontSize = 14.sp)///qqqq
                     }
                 }
 
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    JobTag(text = "On site")
-                    JobTag(text = "Full Time")
+
+//                    JobTag(text = {
+//                        if (!job.remote)
+//                            "On Site"
+//                        else
+//                            "Remote"
+//                    }.toString())
+//                    JobTag(text = {
+//                        if (job.jobTypes.size > 1)
+//                            "${job.jobTypes.size} Options"
+//                        else
+//                            job.jobTypes.get(0)
+//                    }.toString())//qqq
                 }
             }
 
@@ -90,7 +110,7 @@ fun JobCard() {
                     .padding(8.dp)
             ) {
                 Text(
-                    text = "Senior Software Tester",
+                    text = job.title,
                     color = Color.White,
                     modifier = Modifier.align(Alignment.Center)
                 )
@@ -100,9 +120,13 @@ fun JobCard() {
             Spacer(modifier = Modifier.height(8.dp))
 
             Column {
-                Text("Mansoura, Dakahlia, Egypt", color = Color.Black, fontSize = 14.sp)
                 Text(
-                    "Posted from 7 days",
+                    "${job.location}, ${job.locality}",
+                    color = Color.Black,
+                    fontSize = 14.sp
+                )
+                Text(
+                    "Posted from ${formatTimeFromMilliseconds(job.pub_date_ts_milli)}",
                     color = Color.Gray,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold
@@ -115,16 +139,15 @@ fun JobCard() {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End
             ) {
-                ElevatedButton(
-                    onClick = { },
+                Button(
+                    onClick = {
+                        //go to description page
+                    },
                     shape = RoundedCornerShape(16.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Perpi,
-                        contentColor = Color.White
-                    ),
+                    colors = ButtonDefaults.buttonColors(Color.White),
                     border = BorderStroke(1.dp, Color.Gray)
                 ) {
-                    Text("Explore!")
+                    Text("Explore!", color = Color.Black)
                 }
             }
         }
@@ -138,12 +161,24 @@ fun JobTag(text: String) {
             .border(BorderStroke(1.dp, Color.Gray), RoundedCornerShape(16.dp))
             .padding(horizontal = 8.dp, vertical = 4.dp)
     ) {
-        Text(text, color = Perpi, fontSize = 12.sp , fontWeight = FontWeight.SemiBold)
+        Text(text, color = Color.Gray, fontSize = 12.sp)
     }
 }
 
 @Preview(showSystemUi = true)
 @Composable
 private fun JobCardPreview() {
-    JobCard()
+//
+}
+fun formatTimeFromMilliseconds(milliseconds: Long): String {
+    val localDateTime = Instant.ofEpochMilli(milliseconds)
+        .atZone(ZoneId.systemDefault())
+        .toLocalDateTime()
+    val currentDateTime = LocalDateTime.now()
+    val difference = currentDateTime.minusDays(7)
+    if (localDateTime.isAfter(difference)) {
+        return localDateTime.format(DateTimeFormatter.ofPattern("HH:mm"))
+    } else {
+        return localDateTime.format(DateTimeFormatter.ofPattern("MMM dd, yyyy HH:mm"))
+    }
 }

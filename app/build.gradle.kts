@@ -1,7 +1,11 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+
+    id("com.google.devtools.ksp")
+    id("kotlin-parcelize")
     id("com.google.gms.google-services")
+
 }
 
 android {
@@ -79,6 +83,10 @@ dependencies {
     implementation(libs.play.services.auth)
 
     implementation ("com.google.accompanist:accompanist-flowlayout:0.24.13-rc")
+    implementation("androidx.room:room-ktx:2.6.1")
+    ksp("androidx.room:room-compiler:2.6.1")
+
+
 
 
 }

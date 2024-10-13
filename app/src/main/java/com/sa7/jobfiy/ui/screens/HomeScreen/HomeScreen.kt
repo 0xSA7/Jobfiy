@@ -1,237 +1,101 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
-
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sa7.jobfiy.R
 import com.sa7.jobfiy.ui.commonUi.JobCard
-import com.sa7.jobfiy.ui.commonUi.RadioButtonWithText
+import com.sa7.jobfiy.ui.screens.HomeScreen.HomeScreenViewModel
 import com.sa7.jobfiy.ui.theme.Perpi
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun JobifyScreen() {
-    var isSheetVisible by remember { mutableStateOf(false) }
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    val screenWidth = LocalConfiguration.current.screenWidthDp.dp
-
-    Scaffold {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.White)
-        ) {
-            JobifyAppBar()
-
-            WelcomeSection(userName = "Khaled", screenWidth = screenWidth)
-
-            SearchBar(screenWidth = screenWidth)
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = screenWidth * 0.05f, vertical = 8.dp)
-            ) {
-                Text(
-                    text = "Jobs based on your Search:",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp // Adjusted font size
-                )
-                Spacer(modifier = Modifier.weight(1f))
-
-                IconButton(
-                    onClick = { isSheetVisible = !isSheetVisible },
-                    modifier = Modifier.padding(horizontal = 12.dp)
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.filter),
-                        contentDescription = "Filter",
-                        tint = Perpi,
-                        modifier = Modifier.size(24.dp) // Set consistent icon size
-                    )
-                }
-            }
-
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = screenWidth * 0.05f),
-                contentPadding = PaddingValues(bottom = 16.dp)
-            ) {
-                items(15) {
-                    JobCard()
-                    Spacer(modifier = Modifier.height(12.dp))
-                }
-            }
-
-            if (isSheetVisible) {
-                ModalBottomSheet(
-                    onDismissRequest = { isSheetVisible = false },
-                    sheetState = sheetState
-                ) {
-                    BottomMenuContent()
-                }
-            }
-        }
+fun JobifyScreen(viewModel: HomeScreenViewModel) {
+    // Trigger data fetching when the composable is first created
+    LaunchedEffect(Unit) {
+        viewModel.getJobsForCard()
     }
-}
 
-@Composable
-fun BottomMenuContent() {
+    // Observe the job data and error state using StateFlow
+    val jobs by viewModel.data.collectAsState()
+    val hasError by viewModel.hasError.collectAsState()
+
     Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
+            .fillMaxSize()
+            .background(Color.White)
     ) {
+        JobifyAppBar()
+        WelcomeSection(userName = "Khaled")
+        SearchBar()
+
         Text(
-            "Filter:",
-            modifier = Modifier.padding(8.dp),
-            fontWeight = FontWeight.Bold,
-            fontSize = 24.sp
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            "Workplace",
-            modifier = Modifier.padding(4.dp),
-            fontWeight = FontWeight.Bold,
-            fontSize = 16.sp
+            text = "Jobs based on your profile",
+            modifier = Modifier
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            fontWeight = FontWeight.Bold
         )
 
-        var selectedOption by remember { mutableStateOf("Remote") }
-
-        Column {
-            RadioButtonWithText(
-                text = "Remote",
-                selected = selectedOption == "Remote",
-                onSelect = { selectedOption = "Remote" }
-            )
-            RadioButtonWithText(
-                text = "On-site",
-                selected = selectedOption == "On-site",
-                onSelect = { selectedOption = "On-site" }
-            )
-            RadioButtonWithText(
-                text = "Hybrid",
-                selected = selectedOption == "Hybrid",
-                onSelect = { selectedOption = "Hybrid" }
-            )
+        // Check if there's an error or no jobs available
+        when {
+            hasError -> {
+                Text(text = "Error fetching jobs", modifier = Modifier.padding(16.dp))
+            }
+            jobs?.hits.isNullOrEmpty() -> {
+                Text(text = "No jobs available", modifier = Modifier.padding(16.dp))
+            }
+            else -> {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 16.dp),
+                    contentPadding = PaddingValues(bottom = 16.dp)
+                ) {
+                    items(jobs?.hits ?: emptyList()) { job ->
+                        Log.d("JobifyScreen", "Job: $job")
+                        JobCard(job)
+                        Spacer(modifier = Modifier.height(12.dp))
+                    }
+                }
+            }
         }
-
-        HorizontalDivider(
-            color = Perpi,
-            thickness = 1.dp,
-            modifier = Modifier.padding(horizontal = 32.dp)
-        )
-
-        Spacer(modifier = Modifier.padding(8.dp))
-
-        Text(
-            "Country:",
-            modifier = Modifier.padding(4.dp),
-            fontWeight = FontWeight.Bold,
-            fontSize = 24.sp
-        )
-
-        Spacer(modifier = Modifier.padding(8.dp))
-
-        var text by remember { mutableStateOf("") }
-        OutlinedTextField(
-            value = text,
-            onValueChange = { text = it },
-            shape = RoundedCornerShape(16.dp),
-            modifier = Modifier.fillMaxWidth(),
-            placeholder = { Text(text = "Search for a country") },
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Default.Search,
-                    contentDescription = "Search Icon",
-                    modifier = Modifier.size(20.dp) // Set consistent icon size
-                )
-            },
-            singleLine = true,
-            colors = TextFieldDefaults.colors()
-        )
-
-        Spacer(modifier = Modifier.padding(8.dp))
-
-        HorizontalDivider(
-            color = Perpi,
-            thickness = 1.dp,
-            modifier = Modifier.padding(horizontal = 32.dp)
-        )
-
-        Spacer(modifier = Modifier.padding(8.dp))
-
-        var textC by remember { mutableStateOf("") }
-
-        Text(
-            "City:",
-            modifier = Modifier.padding(4.dp),
-            fontWeight = FontWeight.Bold,
-            fontSize = 24.sp
-        )
-
-        Spacer(modifier = Modifier.padding(8.dp))
-
-        OutlinedTextField(
-            value = textC,
-            onValueChange = { textC = it },
-            shape = RoundedCornerShape(16.dp),
-            modifier = Modifier.fillMaxWidth(),
-            placeholder = { Text(text = "Search for a city") },
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Default.Search,
-                    contentDescription = "Search Icon",
-                    modifier = Modifier.size(20.dp) // Set consistent icon size
-                )
-            },
-            singleLine = true,
-            colors = TextFieldDefaults.colors()
-        )
-
-        Spacer(modifier = Modifier.padding(8.dp))
-
-        HorizontalDivider(
-            color = Perpi,
-            thickness = 1.dp,
-            modifier = Modifier.padding(horizontal = 32.dp)
-        )
-
-        Spacer(modifier = Modifier.padding(8.dp))
-
-        ElevatedButton(
-            onClick = { },
-            modifier = Modifier.fillMaxWidth()
-                .align(Alignment.CenterHorizontally),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Perpi,
-                contentColor = Color.White
-            )
-        ) {
-            Text("Filter")
-        }
-
-
-
     }
 }
 
@@ -250,24 +114,16 @@ fun JobifyAppBar() {
         )
 
         Row {
-            IconButton(
-                onClick = { },
-                colors = IconButtonDefaults.iconButtonColors(contentColor = Perpi)
-            ) {
+            IconButton(onClick = { }) {
                 Icon(
-                    painter = painterResource(id = R.drawable.notification),
-                    contentDescription = "Notifications",
-                    modifier = Modifier.size(24.dp) // Set consistent icon size
+                    painter = painterResource(id = R.drawable.notification), // Replace with your icons
+                    contentDescription = "Notifications"
                 )
             }
-            IconButton(
-                onClick = { },
-                colors = IconButtonDefaults.iconButtonColors(contentColor = Perpi)
-            ) {
+            IconButton(onClick = { }) {
                 Icon(
-                    painter = painterResource(id = R.drawable.settings),
-                    contentDescription = "Settings",
-                    modifier = Modifier.size(24.dp) // Set consistent icon size
+                    painter = painterResource(id = R.drawable.settings), // Replace with your icons
+                    contentDescription = "Settings"
                 )
             }
         }
@@ -275,15 +131,25 @@ fun JobifyAppBar() {
 }
 
 @Composable
-fun WelcomeSection(userName: String, screenWidth: Dp) {
+fun WelcomeSection(userName: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = screenWidth * 0.05f, vertical = 8.dp),
+            .padding(horizontal = 16.dp, vertical = 8.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.user),
+                contentDescription = "User Image",
+                modifier = Modifier
+                    .size(48.dp)
+                    .clip(CircleShape)
+                    .background(Color.Gray)
+            )
             Spacer(modifier = Modifier.width(8.dp))
             Column {
                 Text(
@@ -292,6 +158,7 @@ fun WelcomeSection(userName: String, screenWidth: Dp) {
                     fontWeight = FontWeight.Bold,
                     fontSize = 20.sp
                 )
+
                 Text(
                     text = "Let’s search for your job",
                     color = Color.Gray,
@@ -299,16 +166,16 @@ fun WelcomeSection(userName: String, screenWidth: Dp) {
                 )
             }
         }
+
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchBar(screenWidth: Dp) {
+fun SearchBar() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(screenWidth * 0.05f)
+            .padding(16.dp)
             .background(Color(0xFFF2F2F2), shape = RoundedCornerShape(16.dp)),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -317,23 +184,23 @@ fun SearchBar(screenWidth: Dp) {
             value = text,
             onValueChange = { text = it },
             shape = RoundedCornerShape(16.dp),
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .border(2.dp, Color.Gray, RoundedCornerShape(16.dp)),
             placeholder = { Text(text = "Search a job") },
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Search,
-                    contentDescription = "Search Icon",
-                    modifier = Modifier.size(20.dp) // Set consistent icon size
+                    contentDescription = "Search Icon"
                 )
             },
             singleLine = true,
-            colors = TextFieldDefaults.colors()
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = Color(0xFFF2F2F2),
+                unfocusedContainerColor = Color(0xFFF2F2F2),
+                disabledContainerColor = Color(0xFFF2F2F2),
+                errorContainerColor = Color(0xFFF2F2F2),
+            )
         )
     }
-}
-
-@Preview(showSystemUi = true)
-@Composable
-private fun JobifyScreenPreview() {
-    JobifyScreen()
 }

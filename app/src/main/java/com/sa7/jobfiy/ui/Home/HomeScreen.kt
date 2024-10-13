@@ -22,7 +22,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.rememberNavController
 import com.sa7.jobfiy.R
-//import com.sa7.jobfiy.ui.CommonUi.BottomNavigationBar
 import com.sa7.jobfiy.ui.commonUi.JobCard
 import com.sa7.jobfiy.ui.commonUi.RadioButtonWithText
 import com.sa7.jobfiy.ui.theme.Perpi

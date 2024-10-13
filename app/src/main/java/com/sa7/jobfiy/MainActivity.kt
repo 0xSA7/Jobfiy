@@ -1,22 +1,35 @@
 package com.sa7.jobfiy
-
+import JobDetailPage
+import JobifyScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+
 import com.sa7.jobfiy.app.JobfiyApp
 import com.sa7.jobfiy.authentication.ui.screens.login.LoginScreen
 
 
 
+
+
+import com.sa7.jobfiy.ui.theme.JobfiyTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+          
             LoginScreen()
+            
+            JobfiyTheme {
+                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                    JobDetailPage(modifier = Modifier.padding(innerPadding))
+                }
+            }
+
         }
     }
 }

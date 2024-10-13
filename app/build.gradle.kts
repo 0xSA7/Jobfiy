@@ -73,7 +73,12 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
     implementation(platform(libs.google.firebase.bom))
     implementation(libs.google.firebase.auth)
     implementation(libs.play.services.auth)
+
+    implementation ("com.google.accompanist:accompanist-flowlayout:0.24.13-rc")
+
+
 }

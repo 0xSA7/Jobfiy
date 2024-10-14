@@ -23,6 +23,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.text.HtmlCompat
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.sa7.jobfiy.ui.commonUi.Badge
 import com.sa7.jobfiy.ui.commonUi.JobifyAppBar
 import com.sa7.jobfiy.ui.theme.Perpi
@@ -38,6 +39,8 @@ import com.sa7.jobfiy.ui.screens.JobSavedScreen.JobViewModelFactory
 fun JobDetailPage(viewModel: JobDescriptionViewModel) {
 
     val job = viewModel.data.observeAsState().value
+
+fun JobDetailPage(navController: NavController) {
 
     // Retrieve screen dimensions
     val configuration = LocalConfiguration.current

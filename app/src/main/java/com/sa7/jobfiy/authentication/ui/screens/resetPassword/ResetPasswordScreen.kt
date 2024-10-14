@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.sa7.jobfiy.R
 import com.sa7.jobfiy.authentication.ui.component.ButtonComponent
 import com.sa7.jobfiy.authentication.ui.component.TextFieldComponent
@@ -23,7 +24,7 @@ import com.sa7.jobfiy.authentication.ui.screens.login.LoginUiEvent
 import com.sa7.jobfiy.authentication.ui.screens.login.LoginViewModel
 
 @Composable
-fun ResetPasswordScreen(loginViewModel: LoginViewModel = viewModel()) {
+fun ResetPasswordScreen(navController: NavController, loginViewModel: LoginViewModel = viewModel()) {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
@@ -52,6 +53,7 @@ fun ResetPasswordScreen(loginViewModel: LoginViewModel = viewModel()) {
                 ButtonComponent("Send Email") {
                     // Handle the send email button click event
                     loginViewModel.onEvent(LoginUiEvent.ResetPasswordButtonClicked)
+                    navController.popBackStack()
                 }
             }
 

@@ -8,10 +8,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.sa7.jobfiy.authentication.Validator
-import com.sa7.jobfiy.authentication.ui.navigation.AppRoute
-import com.sa7.jobfiy.authentication.ui.navigation.Screen
 
 class LoginViewModel : ViewModel() {
+
     // State of the UI
     var loginUiState = mutableStateOf(LoginUiState())
     // State of the validation
@@ -114,7 +113,7 @@ class LoginViewModel : ViewModel() {
                         emailId.value = email
                         isUserLoggedIn.value = true
                         // Navigate to the next screen
-                        AppRoute.navigateTo(Screen.HomeScreen)
+
                     } else {
                         // Email not verified
                         Log.w(TAG, "Email not verified. Please verify your email.")

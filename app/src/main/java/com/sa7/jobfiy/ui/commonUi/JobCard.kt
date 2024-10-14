@@ -31,12 +31,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.sa7.jobfiy.R
 import com.sa7.jobfiy.api.JobSearch
 import com.sa7.jobfiy.ui.theme.Perpi
 
 @Composable
 fun JobCard(job: JobSearch, onJobClick: (String) -> Unit) {
+
+import com.sa7.jobfiy.ui.navigation.Routes
+import com.sa7.jobfiy.ui.theme.Perpi
+
+@Composable
+fun JobCard(navController: NavController) {
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -110,7 +118,11 @@ fun JobCard(job: JobSearch, onJobClick: (String) -> Unit) {
             ) {
                 ElevatedButton(
                     onClick = {
+
                         onJobClick(job.id)
+
+                        navController.navigate(Routes.JOB_DESCRIPTION)
+
                     },
                     shape = RoundedCornerShape(16.dp),
                     colors = ButtonDefaults.buttonColors(
@@ -137,8 +149,6 @@ fun JobTag(text: String) {
     }
 }
 
-//@Preview(showSystemUi = true)
-//@Composable
-//private fun JobCardPreview() {
-//    JobCard()
-//}
+
+
+

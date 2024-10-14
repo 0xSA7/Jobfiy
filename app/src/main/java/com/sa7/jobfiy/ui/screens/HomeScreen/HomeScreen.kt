@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.sa7.jobfiy.Database.Job
 import com.sa7.jobfiy.R
 import com.sa7.jobfiy.ui.commonUi.JobCard
@@ -42,6 +43,9 @@ import com.sa7.jobfiy.ui.theme.Perpi
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun JobifyScreen(viewModel: HomeScreenViewModel, onSearchChange: (String) -> Unit, onJobClick: (String) -> Unit) {
+
+fun JobifyScreen(navController: NavController) {
+
     var isSheetVisible by remember { mutableStateOf(false) }
 
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -88,6 +92,7 @@ fun JobifyScreen(viewModel: HomeScreenViewModel, onSearchChange: (String) -> Uni
                 }
             }
 
+
             IndeterminateCircularIndicator(viewModel)
 
             if (jobs.isNullOrEmpty()) {
@@ -107,6 +112,17 @@ fun JobifyScreen(viewModel: HomeScreenViewModel, onSearchChange: (String) -> Uni
                         }
                         Spacer(modifier = Modifier.height(12.dp))
                     }
+
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = screenWidth * 0.05f),
+                contentPadding = PaddingValues(bottom = 16.dp)
+            ) {
+                items(15) {
+                    JobCard(navController)
+                    Spacer(modifier = Modifier.height(12.dp))
+
                 }
             }
             if (isSheetVisible) {
@@ -336,6 +352,7 @@ fun SearchBar(screenWidth: Dp, onSearchChange: (String) -> Unit) {
     }
 }
 
+
 @Composable
 fun IndeterminateCircularIndicator(viewModel: HomeScreenViewModel) {
     if (!viewModel.isLoading) return
@@ -353,4 +370,5 @@ fun IndeterminateCircularIndicator(viewModel: HomeScreenViewModel) {
     }
 
 }
+
 

@@ -20,7 +20,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import com.sa7.jobfiy.authentication.ui.screens.login.LoginScreen
+
 import com.sa7.jobfiy.ui.screens.HomeScreen.HomeScreenViewModel
+
+import com.sa7.jobfiy.ui.navigation.AppNavHost
 
 import com.sa7.jobfiy.ui.theme.JobfiyTheme
 
@@ -35,7 +38,7 @@ class MainActivity : ComponentActivity() {
                 )
             viewModel.getJobsForCard("all")
             JobfiyTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding
                     JobifyScreen(viewModel, { search->
                         if (search.isEmpty())
                             viewModel.getJobsForCard("all")
@@ -44,6 +47,8 @@ class MainActivity : ComponentActivity() {
                     }, {
                         viewModel.selectedJob = it
                     })
+
+                   AppNavHost()
                 }
             }
 

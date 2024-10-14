@@ -78,7 +78,7 @@ fun ClickableTextComponent(value: String, onClickButton: () -> Unit) {
 }
 
 @Composable
-fun UnderlinedTextComponent(value: String, viewModel: LoginViewModel = viewModel()) {
+fun UnderlinedTextComponent(value: String, viewModel: LoginViewModel = viewModel(), onClickButton: () -> Unit) {
     Box(
         modifier = Modifier.fillMaxWidth(),
         contentAlignment = Alignment.Center
@@ -86,7 +86,8 @@ fun UnderlinedTextComponent(value: String, viewModel: LoginViewModel = viewModel
         ClickableText(
             text = AnnotatedString(value),
             onClick = {
-                // Navigate to the ResetPassword screen
+              onClickButton(
+              )
             },
             modifier = Modifier
                 .padding(top = 16.dp),

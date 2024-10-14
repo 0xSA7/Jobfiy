@@ -1,5 +1,7 @@
 package com.sa7.jobfiy
 
+import JobDetailPage
+import JobifyScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -7,10 +9,22 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStoreOwner
+import com.sa7.jobfiy.authentication.ui.screens.login.LoginScreen
+
+import com.sa7.jobfiy.ui.screens.HomeScreen.HomeScreenViewModel
+
+import com.sa7.jobfiy.ui.navigation.AppNavHost
+
 import com.sa7.jobfiy.ui.theme.JobfiyTheme
 
 class MainActivity : ComponentActivity() {
@@ -19,29 +33,12 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             JobfiyTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding->
+                   AppNavHost()
                 }
             }
+
         }
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    JobfiyTheme {
-        Greeting("Android")
-    }
-}

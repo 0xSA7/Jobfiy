@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.sa7.jobfiy.authentication.ui.screens.login.LoginScreen
+import com.sa7.jobfiy.ui.navigation.AppNavHost
 
 import com.sa7.jobfiy.ui.theme.JobfiyTheme
 class MainActivity : ComponentActivity() {
@@ -22,7 +23,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             JobfiyTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    JobDetailPage(modifier = Modifier.padding(innerPadding))
+                   AppNavHost()
                 }
             }
         }

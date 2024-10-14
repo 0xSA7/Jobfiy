@@ -21,6 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.sa7.jobfiy.ui.commonUi.Badge
 import com.sa7.jobfiy.ui.commonUi.JobifyAppBar
 import com.sa7.jobfiy.ui.theme.Perpi
@@ -32,7 +33,7 @@ import com.sa7.jobfiy.ui.screens.JobSavedScreen.JobViewModel
 import com.sa7.jobfiy.ui.screens.JobSavedScreen.JobViewModelFactory
 
 @Composable
-fun JobDetailPage(modifier: Modifier) {
+fun JobDetailPage(navController: NavController) {
     // Retrieve screen dimensions
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp

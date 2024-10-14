@@ -1,6 +1,7 @@
 package com.sa7.jobfiy.authentication.ui.screens.login
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -16,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.sa7.jobfiy.R
 import com.sa7.jobfiy.authentication.ui.component.ButtonComponent
 import com.sa7.jobfiy.authentication.ui.component.ClickableTextComponent
@@ -26,11 +28,11 @@ import com.sa7.jobfiy.authentication.ui.component.NormalTextComponent
 import com.sa7.jobfiy.authentication.ui.component.PasswordTextFieldComponent
 import com.sa7.jobfiy.authentication.ui.component.TextFieldComponent
 import com.sa7.jobfiy.authentication.ui.component.UnderlinedTextComponent
-import com.sa7.jobfiy.authentication.ui.navigation.AppRoute
-import com.sa7.jobfiy.authentication.ui.navigation.Screen
+import com.sa7.jobfiy.ui.navigation.Routes
+
 
 @Composable
-fun LoginScreen(loginViewModel: LoginViewModel = viewModel()) {
+fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel = viewModel()) {
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -44,7 +46,9 @@ fun LoginScreen(loginViewModel: LoginViewModel = viewModel()) {
                 .padding(28.dp)
         ) {
             Column(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
             ) {
                 NormalTextComponent("Welcome back,")
                 HeadingTextComponent("Login to your account")
@@ -64,18 +68,21 @@ fun LoginScreen(loginViewModel: LoginViewModel = viewModel()) {
                     errorStatus = loginViewModel.loginUiState.value.passwordError
                 )
                 Spacer(modifier = Modifier.heightIn(10.dp))
-                UnderlinedTextComponent("Forgot your password")
+                UnderlinedTextComponent("Forgot your password", onClickButton = {navController.navigate(Routes.RESET_PASSWORD)})
                 Spacer(modifier = Modifier.heightIn(80.dp))
                 ButtonComponent("Login") {
-                    // listen to login button click
                     loginViewModel.onEvent(LoginUiEvent.LoginButtonClicked)
+                    if(loginViewModel.isUserLoggedInLiveData.value == true){
+                        navController.navigate(Routes.JOBIFY_SCREEN)
+                    }
+
                 }
                 Spacer(modifier = Modifier.heightIn(10.dp))
                 DividerTextComponent()
                 Spacer(modifier = Modifier.heightIn(10.dp))
                 GoogleButtonComponent()
                 ClickableTextComponent("Don't have an account? Sign Up") {
-                    AppRoute.navigateTo(Screen.SignUpScreen)
+                     navController.navigate(Routes.SIGN_UP)
                 }
             }
         }

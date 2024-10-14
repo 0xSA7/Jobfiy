@@ -43,7 +43,7 @@ Jobfiy is an application designed to help users search for jobs and track their 
 ## Screenshots
 |                                    Home                                     |                                       JobDetails                                        |                                     Search For Job                                      |
 |:---------------------------------------------------------------------------:|:---------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------------:|
-| ![Home](https://github.com/0xSA7/Jobfiy/blob/Develop/screenshots/home.jpeg) | ![JobDetails](https://github.com/0xSA7/Jobfiy/blob/Develop/screenshots/jobdetails.jpeg) | ![Search For Job](https://github.com/0xSA7/Jobfiy/blob/Develop/screenshots/search.jpeg) |
+| ![Home](https://github.com/0xSA7/Jobfiy/blob/develop/screenshots/home.jpeg) | ![JobDetails](https://github.com/0xSA7/Jobfiy/blob/develop/screenshots/jobdetails.jpeg) | ![Search For Job](https://github.com/0xSA7/Jobfiy/blob/develop/screenshots/search.jpeg) |
 
 ## Setup and Installation
 

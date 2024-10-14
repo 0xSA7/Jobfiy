@@ -25,3 +25,12 @@ data class Job(
     val datePosted: String,
 
     ) : Parcelable
+
+
+
+//positionTitle = "Software Engineer",
+//companyName = "Google",
+//location = "Mountain View, CA",
+//workMode = "Remote",
+//employmentType = "Full-time",
+//datePosted = "2 days ago"

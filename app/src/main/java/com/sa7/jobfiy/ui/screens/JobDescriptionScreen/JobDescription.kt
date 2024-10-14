@@ -1,3 +1,5 @@
+import android.app.Application
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.Orientation
@@ -8,6 +10,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -16,12 +19,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sa7.jobfiy.ui.commonUi.Badge
 import com.sa7.jobfiy.ui.commonUi.JobifyAppBar
 import com.sa7.jobfiy.ui.theme.Perpi
 import com.google.accompanist.flowlayout.FlowRow
+import com.sa7.jobfiy.Database.Job
 import com.sa7.jobfiy.ui.commonUi.InfoBox
 import com.sa7.jobfiy.ui.commonUi.JobDetailItem
+import com.sa7.jobfiy.ui.screens.JobSavedScreen.JobViewModel
+import com.sa7.jobfiy.ui.screens.JobSavedScreen.JobViewModelFactory
 
 @Composable
 fun JobDetailPage(modifier: Modifier) {
@@ -33,6 +41,30 @@ fun JobDetailPage(modifier: Modifier) {
     // Adjust the padding according to screen width
     val horizontalPadding = if (screenWidth < 360.dp) 8.dp else 16.dp
     val verticalPadding = if (screenHeight < 600.dp) 8.dp else 16.dp
+
+
+    // call addJob function to add new job
+    val jobViewModel: JobViewModel = viewModel(
+        factory = JobViewModelFactory(LocalContext.current.applicationContext as Application)
+    )
+    var job = Job(
+        companyName = "Google",
+        positionTitle = "Software Engineer",
+        location = "Mountain View, CA",
+        workMode = "Remote",
+        employmentType = "Full-time",
+        datePosted = "2 days ago"
+    )
+    // call addJob function to add new job in scope of coroutine
+    LaunchedEffect(Unit) {
+        jobViewModel.addJob(job)
+        // print jobs
+        jobViewModel.getAllJobs().forEach {
+            Log.d("Job", it.toString())
+        }
+    }
+
+
 
     Column(
         modifier = Modifier

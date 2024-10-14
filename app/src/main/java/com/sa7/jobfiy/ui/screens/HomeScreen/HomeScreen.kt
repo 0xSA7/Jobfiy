@@ -1,6 +1,7 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
 import android.annotation.SuppressLint
+import android.app.Application
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -20,10 +21,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.sa7.jobfiy.Database.Job
 import com.sa7.jobfiy.R
 import com.sa7.jobfiy.ui.commonUi.JobCard
 import com.sa7.jobfiy.ui.commonUi.JobifyAppBar
 import com.sa7.jobfiy.ui.commonUi.RadioButtonWithText
+import com.sa7.jobfiy.ui.screens.JobSavedScreen.JobViewModel
 import com.sa7.jobfiy.ui.theme.Perpi
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")

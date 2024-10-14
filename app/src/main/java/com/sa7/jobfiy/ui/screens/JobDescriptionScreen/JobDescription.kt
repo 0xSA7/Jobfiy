@@ -1,6 +1,8 @@
 
 import android.content.Intent
 import android.net.Uri
+import android.app.Application
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -9,6 +11,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -18,13 +21,18 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.text.HtmlCompat
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sa7.jobfiy.ui.commonUi.Badge
 import com.sa7.jobfiy.ui.commonUi.JobifyAppBar
 import com.sa7.jobfiy.ui.theme.Perpi
 import com.google.accompanist.flowlayout.FlowRow
+import com.sa7.jobfiy.Database.Job
 import com.sa7.jobfiy.ui.commonUi.InfoBox
 import com.sa7.jobfiy.ui.commonUi.JobDetailItem
 import com.sa7.jobfiy.ui.screens.JobDescriptionScreen.JobDescriptionViewModel
+import com.sa7.jobfiy.ui.screens.JobSavedScreen.JobViewModel
+import com.sa7.jobfiy.ui.screens.JobSavedScreen.JobViewModelFactory
 
 @Composable
 fun JobDetailPage(viewModel: JobDescriptionViewModel) {

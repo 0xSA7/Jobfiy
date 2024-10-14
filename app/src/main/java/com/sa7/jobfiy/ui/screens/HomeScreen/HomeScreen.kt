@@ -2,6 +2,7 @@
 
 import android.annotation.SuppressLint
 import android.util.Log
+import android.app.Application
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -26,10 +27,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
+import com.sa7.jobfiy.Database.Job
 import com.sa7.jobfiy.R
 import com.sa7.jobfiy.ui.commonUi.JobCard
 import com.sa7.jobfiy.ui.commonUi.JobifyAppBar
 import com.sa7.jobfiy.ui.commonUi.RadioButtonWithText
+import com.sa7.jobfiy.ui.screens.JobSavedScreen.JobViewModel
 import com.sa7.jobfiy.ui.screens.HomeScreen.HomeScreenViewModel
 import com.sa7.jobfiy.ui.theme.Perpi
 lateinit var  viewModel: HomeScreenViewModel

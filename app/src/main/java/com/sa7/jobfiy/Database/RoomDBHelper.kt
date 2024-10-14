@@ -4,7 +4,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [Job::class, JobSaved::class], version = 2, exportSchema = false)
+@Database(entities = [Job::class, JobSaved::class], version = 1, exportSchema = false)
 abstract class RoomDBHelper : RoomDatabase() {
     abstract val jobDao: JobDao
 
@@ -15,7 +15,6 @@ abstract class RoomDBHelper : RoomDatabase() {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room
                     .databaseBuilder(context, RoomDBHelper::class.java, "job_db")
-                    .fallbackToDestructiveMigration() // Migration strategy for version update
                     .build()
                 INSTANCE = instance
                 instance

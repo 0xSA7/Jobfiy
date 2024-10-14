@@ -94,4 +94,8 @@ dependencies {
     ksp(libs.androidx.room.compiler)
     implementation (libs.androidx.core)
 
+    implementation ("com.google.accompanist:accompanist-flowlayout:0.24.13-rc")
+    implementation("androidx.room:room-ktx:2.6.1")
+    ksp("androidx.room:room-compiler:2.6.1")
+
 }

@@ -32,10 +32,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sa7.jobfiy.R
+import com.sa7.jobfiy.api.JobSearch
 import com.sa7.jobfiy.ui.theme.Perpi
 
 @Composable
-fun JobCard() {
+fun JobCard(job: JobSearch) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -55,6 +56,7 @@ fun JobCard() {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Row {
+                    //Should be removed
                     Image(
                         painter = painterResource(R.drawable.ic_launcher_background), // Replace with your logo resource
                         contentDescription = "Company Logo",
@@ -67,16 +69,16 @@ fun JobCard() {
                     Spacer(modifier = Modifier.width(8.dp))
 
                     Column {
-                        Text("Meta", fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                        Text("Dev ops Company", color = Color.Black, fontSize = 14.sp)
+                        Text(job.company_name, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                      //  Text("Dev ops Company", color = Color.Black, fontSize = 14.sp)
                     }
                 }
 
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    JobTag(text = "On site")
-                    JobTag(text = "Full Time")
+//                    JobTag(text = "On site")
+//                    JobTag(text = "Full Time")
                 }
             }
 
@@ -100,9 +102,9 @@ fun JobCard() {
             Spacer(modifier = Modifier.height(8.dp))
 
             Column {
-                Text("Mansoura, Dakahlia, Egypt", color = Color.Black, fontSize = 14.sp)
+                Text("${job.location}, ${job.locality}", color = Color.Black, fontSize = 14.sp)
                 Text(
-                    "Posted from 7 days",
+                    "Posted from ${job.formatted_relative_time}",
                     color = Color.Gray,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold
@@ -116,7 +118,10 @@ fun JobCard() {
                 horizontalArrangement = Arrangement.End
             ) {
                 ElevatedButton(
-                    onClick = { },
+                    onClick = {
+                            //go to description page
+                        job.id
+                    },
                     shape = RoundedCornerShape(16.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Perpi,
@@ -142,8 +147,8 @@ fun JobTag(text: String) {
     }
 }
 
-@Preview(showSystemUi = true)
-@Composable
-private fun JobCardPreview() {
-    JobCard()
-}
+//@Preview(showSystemUi = true)
+//@Composable
+//private fun JobCardPreview() {
+//    JobCard()
+//}

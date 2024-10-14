@@ -1,31 +1,38 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStoreOwner
 import com.sa7.jobfiy.R
 import com.sa7.jobfiy.ui.commonUi.JobCard
 import com.sa7.jobfiy.ui.commonUi.JobifyAppBar
 import com.sa7.jobfiy.ui.commonUi.RadioButtonWithText
+import com.sa7.jobfiy.ui.screens.HomeScreen.HomeScreenViewModel
 import com.sa7.jobfiy.ui.theme.Perpi
-
+lateinit var  viewModel: HomeScreenViewModel
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -33,6 +40,12 @@ fun JobifyScreen() {
     var isSheetVisible by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
+
+    viewModel =
+        ViewModelProvider(LocalContext.current as ViewModelStoreOwner).get(HomeScreenViewModel::class.java)
+    viewModel.getJobsForCard("all")
+    val jobs = viewModel.data.observeAsState().value?.hits
+    Log.d("JobifyScreen", "Jobs: $jobs")
 
     Scaffold {
         Column(
@@ -71,18 +84,22 @@ fun JobifyScreen() {
                 }
             }
 
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = screenWidth * 0.05f),
-                contentPadding = PaddingValues(bottom = 16.dp)
-            ) {
-                items(15) {
-                    JobCard()
-                    Spacer(modifier = Modifier.height(12.dp))
+            if (jobs.isNullOrEmpty()) {
+                Text(text = "No jobs available", modifier = Modifier.padding(16.dp))
+            } else {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 16.dp),
+                    contentPadding = PaddingValues(bottom = 16.dp)
+                ) {
+                    items(jobs) { job ->
+                        Log.d("JobifyScreen", "Job: $job")
+                        JobCard(job)
+                        Spacer(modifier = Modifier.height(12.dp))
+                    }
                 }
             }
-
             if (isSheetVisible) {
                 ModalBottomSheet(
                     onDismissRequest = { isSheetVisible = false },
@@ -221,7 +238,8 @@ fun BottomMenuContent() {
 
         ElevatedButton(
             onClick = { },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .align(Alignment.CenterHorizontally),
             colors = ButtonDefaults.buttonColors(
                 containerColor = Perpi,
@@ -230,7 +248,6 @@ fun BottomMenuContent() {
         ) {
             Text("Filter")
         }
-
 
 
     }
@@ -292,6 +309,7 @@ fun SearchBar(screenWidth: Dp) {
             singleLine = true,
             colors = TextFieldDefaults.colors()
         )
+        viewModel.getJobsForCard(text)
     }
 }
 

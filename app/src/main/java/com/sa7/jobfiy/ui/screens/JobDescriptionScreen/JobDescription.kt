@@ -1,30 +1,36 @@
+
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.text.HtmlCompat
 import com.sa7.jobfiy.ui.commonUi.Badge
 import com.sa7.jobfiy.ui.commonUi.JobifyAppBar
 import com.sa7.jobfiy.ui.theme.Perpi
 import com.google.accompanist.flowlayout.FlowRow
 import com.sa7.jobfiy.ui.commonUi.InfoBox
 import com.sa7.jobfiy.ui.commonUi.JobDetailItem
+import com.sa7.jobfiy.ui.screens.JobDescriptionScreen.JobDescriptionViewModel
 
 @Composable
-fun JobDetailPage(modifier: Modifier) {
+fun JobDetailPage(viewModel: JobDescriptionViewModel) {
+
+    val job = viewModel.data.observeAsState().value
+
     // Retrieve screen dimensions
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp
@@ -47,20 +53,20 @@ fun JobDetailPage(modifier: Modifier) {
 
         // Job Title Section
         Text(
-            text = "Senior Software Tester",
+            text = job!!.job_title,
             fontWeight = FontWeight.Bold,
             fontSize = 22.sp,
             modifier = Modifier.fillMaxWidth(),
         )
 
         Row(modifier = Modifier.padding(top = 8.dp)) {
-            Badge(text = "On site")
+            Badge(text = job!!.job_type)
             Spacer(modifier = Modifier.width(8.dp))
-            Badge(text = "Full Time")
+            //  Badge(text = "Full Time")
         }
 
         Text(
-            text = "Meta - Mansoura, Dakahlia",
+            text = "${job?.company?.name} - ${job?.location}",
             color = Color.Black,
             fontSize = 16.sp,
             fontWeight = FontWeight.SemiBold,
@@ -82,10 +88,13 @@ fun JobDetailPage(modifier: Modifier) {
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-
+        val context = LocalContext.current
         // Apply Button
         Button(
-            onClick = { /* Apply */ },
+            onClick = {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(job!!.indeed_final_url))
+                context.startActivity(intent)
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(48.dp),
@@ -114,7 +123,10 @@ fun JobDetailPage(modifier: Modifier) {
                 value = "Entry Level (Junior Level / Fresh Grad)"
             )
             JobDetailItem(label = "Education Level:", value = "Bachelor's Degree")
-            JobDetailItem(label = "Salary:", value = "8000 to 8000 EGP Per Month")
+            JobDetailItem(
+                label = "Salary:",
+                value = "${job!!.salary.min} to ${job!!.salary.max} Per ${job!!.salary.type}"
+            )
             JobDetailItem(label = "Job Categories:", value = "IT/Software Development")
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -128,7 +140,7 @@ fun JobDetailPage(modifier: Modifier) {
                 crossAxisSpacing = 8.dp,
                 modifier = Modifier.padding(top = 8.dp)
             ) {
-                Badge("Software Testing" )
+                Badge("Software Testing")
                 Badge("Automation Testing")
                 Badge("Regression Testing")
                 Badge("Quality Assurance")
@@ -142,31 +154,14 @@ fun JobDetailPage(modifier: Modifier) {
             // Job Description Section
             Text("Job description", fontWeight = FontWeight.Bold, fontSize = 18.sp)
             Text(
-                text = """
-                • We are looking for a dedicated Software QA Tester to join our developing team.
-                • 1 vacancy working from office only (Nasr City / Cairo).
-                • Review and analyze system specifications.
-                • Running test programs to ensure that testing protocols evaluate the software correctly.
-                • We are looking for a dedicated Software QA Tester to join our developing team.
-                • 1 vacancy working from office only (Nasr City / Cairo).
-                • Review and analyze system specifications.
-                • Running test programs to ensure that testing protocols evaluate the software correctly.
-                • We are looking for a dedicated Software QA Tester to join our developing team.
-                • 1 vacancy working from office only (Nasr City / Cairo).
-                • Review and analyze system specifications.
-                • Running test programs to ensure that testing protocols evaluate the software correctly.
-                • We are looking for a dedicated Software QA Tester to join our developing team.
-                • 1 vacancy working from office only (Nasr City / Cairo).
-                • Review and analyze system specifications.
-                • Running test programs to ensure that testing protocols evaluate the software correctly.
-            """.trimIndent(),
+                text = HtmlCompat.fromHtml(job!!.description, HtmlCompat.FROM_HTML_MODE_LEGACY)
+                    .toString()
+                    .trimIndent(),
                 fontSize = 16.sp,
                 modifier = Modifier.padding(top = 8.dp)
             )
         }
     }
-
-
 }
 
 

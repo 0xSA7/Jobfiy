@@ -57,20 +57,11 @@ fun JobCard(job: JobSearch, onJobClick: (String) -> Unit) {
             ) {
                 Row {
                     //Should be removed
-                    Image(
-                        painter = painterResource(R.drawable.ic_launcher_background), // Replace with your logo resource
-                        contentDescription = "Company Logo",
-                        modifier = Modifier
-                            .size(48.dp)
-                            .clip(RoundedCornerShape(8.dp))
-                            .background(Color(0xFFf5f5f5))
-                    )
-
                     Spacer(modifier = Modifier.width(8.dp))
 
                     Column {
                         Text(job.company_name, fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                      //  Text("Dev ops Company", color = Color.Black, fontSize = 14.sp)
+
                     }
                 }
 
@@ -92,7 +83,7 @@ fun JobCard(job: JobSearch, onJobClick: (String) -> Unit) {
                     .padding(8.dp)
             ) {
                 Text(
-                    text = "Senior Software Tester",
+                    text = job.title,
                     color = Color.White,
                     modifier = Modifier.align(Alignment.Center)
                 )

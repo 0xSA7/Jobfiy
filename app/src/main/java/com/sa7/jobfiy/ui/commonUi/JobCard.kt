@@ -36,7 +36,7 @@ import com.sa7.jobfiy.api.JobSearch
 import com.sa7.jobfiy.ui.theme.Perpi
 
 @Composable
-fun JobCard(job: JobSearch) {
+fun JobCard(job: JobSearch, onJobClick: (String) -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -119,8 +119,7 @@ fun JobCard(job: JobSearch) {
             ) {
                 ElevatedButton(
                     onClick = {
-                            //go to description page
-                        job.id
+                        onJobClick(job.id)
                     },
                     shape = RoundedCornerShape(16.dp),
                     colors = ButtonDefaults.buttonColors(

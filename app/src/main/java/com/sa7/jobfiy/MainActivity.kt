@@ -36,7 +36,14 @@ class MainActivity : ComponentActivity() {
             viewModel.getJobsForCard("all")
             JobfiyTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    JobifyScreen(viewModel)
+                    JobifyScreen(viewModel, { search->
+                        if (search.isEmpty())
+                            viewModel.getJobsForCard("all")
+                        else
+                            viewModel.getJobsForCard(search)
+                    }, {
+                        viewModel.selectedJob = it
+                    })
                 }
             }
 

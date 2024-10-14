@@ -35,18 +35,15 @@ import com.sa7.jobfiy.ui.commonUi.RadioButtonWithText
 import com.sa7.jobfiy.ui.screens.JobSavedScreen.JobViewModel
 import com.sa7.jobfiy.ui.screens.HomeScreen.HomeScreenViewModel
 import com.sa7.jobfiy.ui.theme.Perpi
-lateinit var  viewModel: HomeScreenViewModel
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun JobifyScreen() {
+fun JobifyScreen(viewModel: HomeScreenViewModel) {
     var isSheetVisible by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
 
-    viewModel =
-        ViewModelProvider(LocalContext.current as ViewModelStoreOwner).get(HomeScreenViewModel::class.java)
-    viewModel.getJobsForCard("all")
+
     val jobs = viewModel.data.observeAsState().value?.hits
     Log.d("JobifyScreen", "Jobs: $jobs")
 
@@ -60,7 +57,7 @@ fun JobifyScreen() {
 
             WelcomeSection(userName = "Khaled", screenWidth = screenWidth)
 
-            SearchBar(screenWidth = screenWidth)
+            SearchBar(screenWidth = screenWidth,viewModel)
 
             Row(
                 modifier = Modifier
@@ -287,7 +284,7 @@ fun WelcomeSection(userName: String, screenWidth: Dp) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchBar(screenWidth: Dp) {
+fun SearchBar(screenWidth: Dp,viewModel: HomeScreenViewModel) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -316,8 +313,4 @@ fun SearchBar(screenWidth: Dp) {
     }
 }
 
-@Preview(showSystemUi = true)
-@Composable
-private fun JobifyScreenPreview() {
-    JobifyScreen()
-}
+

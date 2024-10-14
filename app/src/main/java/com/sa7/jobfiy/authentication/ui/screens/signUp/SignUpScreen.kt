@@ -103,6 +103,9 @@ fun SignUpScreen(navController: NavController, signUpViewModel: SignUpViewModel 
                 ButtonComponent(
                     "Sign Up") {
                     signUpViewModel.onEvent(SignUpUiEvent.RegisterButtonClicked)
+                    if(signUpViewModel.registrationCompleted.value==true){
+                        navController.navigate(Routes.LOGIN)
+                    }
                 }
                 Spacer(modifier = Modifier.heightIn(10.dp))
                 DividerTextComponent()

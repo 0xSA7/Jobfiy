@@ -10,7 +10,7 @@ import retrofit2.http.Query
 interface IndeedApiService {
 
     @Headers(
-        "x-rapidapi-key:7097361e06mshf49816ac85f8ad2p1d912ajsndadf3aed5e6f",
+        "x-rapidapi-key:48469b9308msh836e84246f83ddap1eb47ajsn50e8fd77ebcf",
         "x-rapidapi-host:indeed12.p.rapidapi.com"
     )
     @GET("jobs/search")

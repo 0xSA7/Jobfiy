@@ -3,6 +3,8 @@ package com.sa7.jobfiy.authentication.ui.screens.signUp
 import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.sa7.jobfiy.authentication.Validator
@@ -10,10 +12,16 @@ import com.sa7.jobfiy.authentication.Validator
 class SignUpViewModel : ViewModel() {
     // registrationUiState is a mutable state of RegistrationUiState
     var registrationUiState = mutableStateOf(RegistrationUiState())
+
     // to check if all the validation passed
     private var allValidationPassed = mutableStateOf(false)
+
     // to check if the registration is in progress
     var registrationProgress = mutableStateOf(false)
+
+    // LiveData to track if registration is successful
+    private val _registrationCompleted = MutableLiveData<Boolean>()
+    val registrationCompleted: LiveData<Boolean> = _registrationCompleted
 
     // onEvent function to handle the events from the SignUpUiEvent
     fun onEvent(signUpUiEvent: SignUpUiEvent) {
@@ -66,7 +74,6 @@ class SignUpViewModel : ViewModel() {
         }
     }
 
-
     // validateDataWithRules function to validate the data with the rules
     private fun validateDataWithRules() {
         // validate the first name, last name, email, password, and confirm password
@@ -89,18 +96,12 @@ class SignUpViewModel : ViewModel() {
         )
 
         // if all the validation passed, set allValidationPassed to true
-        if(fName.status && lName.status && email.status && password.status && confirmPassword.status) {
-            allValidationPassed.value = true
-        } else {
-            allValidationPassed.value = false
-        }
+        allValidationPassed.value = fName.status && lName.status && email.status && password.status && confirmPassword.status
     }
 
     private fun printState() {
         Log.d("SignUpViewModel", "State: ${registrationUiState.value}")
-
     }
-
 
     // createUserInFirebase function to create the user in firebase
     private fun createUserInFirebase(email: String, password: String) {
@@ -120,19 +121,21 @@ class SignUpViewModel : ViewModel() {
                             Log.d(TAG, "Email verification sent.")
                             registrationProgress.value = false
 
-                            // Notify the user to check their email
-                            Log.d(TAG, "Please verify your email before logging in.")
+                            // Notify that the registration is completed successfully
+                            _registrationCompleted.value = true
 
                             // Sign out the user after sending the verification email
                             auth.signOut()
                         } else {
                             Log.w(TAG, "sendEmailVerification:failure", emailTask.exception)
                             registrationProgress.value = false
+                            _registrationCompleted.value = false
                         }
                     }
                 } else {
                     Log.w(TAG, "createUserWithEmail:failure", task.exception)
                     registrationProgress.value = false
+                    _registrationCompleted.value = false
                 }
             }
     }

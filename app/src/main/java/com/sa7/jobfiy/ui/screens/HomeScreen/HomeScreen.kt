@@ -42,17 +42,16 @@ import com.sa7.jobfiy.ui.theme.Perpi
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun JobifyScreen(viewModel: HomeScreenViewModel, onSearchChange: (String) -> Unit, onJobClick: (String) -> Unit) {
-
-fun JobifyScreen(navController: NavController) {
-
+fun JobifyScreen(
+    navController: NavController,
+    viewModel: HomeScreenViewModel,
+    onSearchChange: (String) -> Unit,
+    onJobClick: (String) -> Unit
+) {
     var isSheetVisible by remember { mutableStateOf(false) }
-
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
-
     val jobs = viewModel.data.observeAsState().value?.hits
-    Log.d("JobifyScreen", "Jobs: $jobs")
 
     Scaffold {
         Column(
@@ -61,9 +60,9 @@ fun JobifyScreen(navController: NavController) {
                 .background(Color.White)
         ) {
             JobifyAppBar()
-            WelcomeSection(userName = "Khaled", screenWidth = screenWidth)
+            WelcomeSection(userName = "User", screenWidth = screenWidth)
 
-            SearchBar(screenWidth = screenWidth){ search ->
+            SearchBar(screenWidth = screenWidth) { search ->
                 onSearchChange(search)
             }
 
@@ -92,7 +91,6 @@ fun JobifyScreen(navController: NavController) {
                 }
             }
 
-
             IndeterminateCircularIndicator(viewModel)
 
             if (jobs.isNullOrEmpty()) {
@@ -107,24 +105,13 @@ fun JobifyScreen(navController: NavController) {
                 ) {
                     items(jobs) { job ->
                         Log.d("JobifyScreen", "Job: $job")
-                        JobCard(job){
-                            onJobClick(it)
-                        }
+                        JobCard(job,navController)
                         Spacer(modifier = Modifier.height(12.dp))
                     }
-
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = screenWidth * 0.05f),
-                contentPadding = PaddingValues(bottom = 16.dp)
-            ) {
-                items(15) {
-                    JobCard(navController)
-                    Spacer(modifier = Modifier.height(12.dp))
-
                 }
             }
+
+            // This should be outside LazyColumn to avoid nested scrolling issues.
             if (isSheetVisible) {
                 ModalBottomSheet(
                     onDismissRequest = { isSheetVisible = false },
@@ -136,6 +123,7 @@ fun JobifyScreen(navController: NavController) {
         }
     }
 }
+
 
 @Composable
 fun BottomMenuContent() {

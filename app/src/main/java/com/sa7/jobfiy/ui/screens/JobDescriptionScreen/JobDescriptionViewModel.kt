@@ -23,9 +23,13 @@ class JobDescriptionViewModel : ViewModel() {
     private val endPoint =
         ApiClient.getRetrofitClient().create(IndeedApiService::class.java)
 
-    fun getJobDetails(jobID: String) {
+    fun getJobDetails(jobID: String?) {
         viewModelScope.launch {
             try {
+                if (jobID == null) {
+                    _data.value = null
+                    return@launch
+                }
                 val response = withContext(Dispatchers.IO) {
                     endPoint.getJobsDetails(
                         jobId = jobID)

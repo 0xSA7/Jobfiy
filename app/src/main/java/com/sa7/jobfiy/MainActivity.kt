@@ -32,22 +32,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            val viewModel: HomeScreenViewModel =
-                ViewModelProvider(LocalContext.current as ViewModelStoreOwner).get(
-                    HomeScreenViewModel::class.java
-                )
-            viewModel.getJobsForCard("all")
             JobfiyTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding
-                    JobifyScreen(viewModel, { search->
-                        if (search.isEmpty())
-                            viewModel.getJobsForCard("all")
-                        else
-                            viewModel.getJobsForCard(search)
-                    }, {
-                        viewModel.selectedJob = it
-                    })
-
+                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding->
                    AppNavHost()
                 }
             }

@@ -1,26 +1,33 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.app.Application
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStoreOwner
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.sa7.jobfiy.Database.Job
 import com.sa7.jobfiy.R
@@ -28,15 +35,24 @@ import com.sa7.jobfiy.ui.commonUi.JobCard
 import com.sa7.jobfiy.ui.commonUi.JobifyAppBar
 import com.sa7.jobfiy.ui.commonUi.RadioButtonWithText
 import com.sa7.jobfiy.ui.screens.JobSavedScreen.JobViewModel
+import com.sa7.jobfiy.ui.screens.HomeScreen.HomeScreenViewModel
 import com.sa7.jobfiy.ui.theme.Perpi
+
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
+fun JobifyScreen(viewModel: HomeScreenViewModel, onSearchChange: (String) -> Unit, onJobClick: (String) -> Unit) {
+
 fun JobifyScreen(navController: NavController) {
+
     var isSheetVisible by remember { mutableStateOf(false) }
+
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
+
+    val jobs = viewModel.data.observeAsState().value?.hits
+    Log.d("JobifyScreen", "Jobs: $jobs")
 
     Scaffold {
         Column(
@@ -45,10 +61,11 @@ fun JobifyScreen(navController: NavController) {
                 .background(Color.White)
         ) {
             JobifyAppBar()
-
             WelcomeSection(userName = "Khaled", screenWidth = screenWidth)
 
-            SearchBar(screenWidth = screenWidth)
+            SearchBar(screenWidth = screenWidth){ search ->
+                onSearchChange(search)
+            }
 
             Row(
                 modifier = Modifier
@@ -75,6 +92,27 @@ fun JobifyScreen(navController: NavController) {
                 }
             }
 
+
+            IndeterminateCircularIndicator(viewModel)
+
+            if (jobs.isNullOrEmpty()) {
+                if (viewModel.isDataLoaded)
+                    Text(text = "No jobs available", modifier = Modifier.padding(16.dp))
+            } else {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 16.dp),
+                    contentPadding = PaddingValues(bottom = 16.dp)
+                ) {
+                    items(jobs) { job ->
+                        Log.d("JobifyScreen", "Job: $job")
+                        JobCard(job){
+                            onJobClick(it)
+                        }
+                        Spacer(modifier = Modifier.height(12.dp))
+                    }
+
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
@@ -84,9 +122,9 @@ fun JobifyScreen(navController: NavController) {
                 items(15) {
                     JobCard(navController)
                     Spacer(modifier = Modifier.height(12.dp))
+
                 }
             }
-
             if (isSheetVisible) {
                 ModalBottomSheet(
                     onDismissRequest = { isSheetVisible = false },
@@ -225,7 +263,8 @@ fun BottomMenuContent() {
 
         ElevatedButton(
             onClick = { },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .align(Alignment.CenterHorizontally),
             colors = ButtonDefaults.buttonColors(
                 containerColor = Perpi,
@@ -234,7 +273,6 @@ fun BottomMenuContent() {
         ) {
             Text("Filter")
         }
-
 
 
     }
@@ -271,20 +309,23 @@ fun WelcomeSection(userName: String, screenWidth: Dp) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchBar(screenWidth: Dp) {
+fun SearchBar(screenWidth: Dp, onSearchChange: (String) -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(screenWidth * 0.05f)
-            .background(Color(0xFFF2F2F2), shape = RoundedCornerShape(16.dp)),
+            .padding(screenWidth * 0.05f),
         verticalAlignment = Alignment.CenterVertically
     ) {
         var text by remember { mutableStateOf("") }
         OutlinedTextField(
             value = text,
-            onValueChange = { text = it },
+            onValueChange = {
+                if (it.isEmpty())
+                    onSearchChange(it)
+                text = it
+            },
             shape = RoundedCornerShape(16.dp),
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.weight(0.75F),
             placeholder = { Text(text = "Search a job") },
             leadingIcon = {
                 Icon(
@@ -296,7 +337,38 @@ fun SearchBar(screenWidth: Dp) {
             singleLine = true,
             colors = TextFieldDefaults.colors()
         )
+
+        IconButton(
+            onClick = { onSearchChange(text) },
+            modifier = Modifier.padding(horizontal = 12.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Default.Search,
+                contentDescription = "Search",
+                tint = Perpi,
+                modifier = Modifier.size(24.dp) // Set consistent icon size
+            )
+        }
     }
+}
+
+
+@Composable
+fun IndeterminateCircularIndicator(viewModel: HomeScreenViewModel) {
+    if (!viewModel.isLoading) return
+
+    Column(
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxSize()
+    ) {
+        CircularProgressIndicator(
+            modifier = Modifier.width(32.dp),
+            color = MaterialTheme.colorScheme.secondary,
+            trackColor = Perpi,
+        )
+    }
+
 }
 
 

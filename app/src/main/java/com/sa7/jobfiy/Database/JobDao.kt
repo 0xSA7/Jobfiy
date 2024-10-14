@@ -24,7 +24,7 @@ interface JobDao {
         DELETE FROM job 
         WHERE id = :jobId 
         AND NOT EXISTS (
-            SELECT 1 FROM job_saved WHERE job_id = :jobId
+            SELECT 1 FROM job_saved WHERE id = :jobId
         )
     """)
     suspend fun deleteJobById(jobId: Int)

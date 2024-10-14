@@ -33,11 +33,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.sa7.jobfiy.R
+import com.sa7.jobfiy.api.JobSearch
+import com.sa7.jobfiy.ui.theme.Perpi
+
+@Composable
+fun JobCard(job: JobSearch, onJobClick: (String) -> Unit) {
+
 import com.sa7.jobfiy.ui.navigation.Routes
 import com.sa7.jobfiy.ui.theme.Perpi
 
 @Composable
 fun JobCard(navController: NavController) {
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -57,28 +64,20 @@ fun JobCard(navController: NavController) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Row {
-                    Image(
-                        painter = painterResource(R.drawable.ic_launcher_background), // Replace with your logo resource
-                        contentDescription = "Company Logo",
-                        modifier = Modifier
-                            .size(48.dp)
-                            .clip(RoundedCornerShape(8.dp))
-                            .background(Color(0xFFf5f5f5))
-                    )
-
+                    //Should be removed
                     Spacer(modifier = Modifier.width(8.dp))
 
                     Column {
-                        Text("Meta", fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                        Text("Dev ops Company", color = Color.Black, fontSize = 14.sp)
+                        Text(job.company_name, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+
                     }
                 }
 
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    JobTag(text = "On site")
-                    JobTag(text = "Full Time")
+//                    JobTag(text = "On site")
+//                    JobTag(text = "Full Time")
                 }
             }
 
@@ -92,7 +91,7 @@ fun JobCard(navController: NavController) {
                     .padding(8.dp)
             ) {
                 Text(
-                    text = "Senior Software Tester",
+                    text = job.title,
                     color = Color.White,
                     modifier = Modifier.align(Alignment.Center)
                 )
@@ -102,9 +101,9 @@ fun JobCard(navController: NavController) {
             Spacer(modifier = Modifier.height(8.dp))
 
             Column {
-                Text("Mansoura, Dakahlia, Egypt", color = Color.Black, fontSize = 14.sp)
+                Text("${job.location}, ${job.locality}", color = Color.Black, fontSize = 14.sp)
                 Text(
-                    "Posted from 7 days",
+                    "Posted from ${job.formatted_relative_time}",
                     color = Color.Gray,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold
@@ -119,6 +118,9 @@ fun JobCard(navController: NavController) {
             ) {
                 ElevatedButton(
                     onClick = {
+
+                        onJobClick(job.id)
+
                         navController.navigate(Routes.JOB_DESCRIPTION)
 
                     },
@@ -146,4 +148,7 @@ fun JobTag(text: String) {
         Text(text, color = Perpi, fontSize = 12.sp , fontWeight = FontWeight.SemiBold)
     }
 }
+
+
+
 

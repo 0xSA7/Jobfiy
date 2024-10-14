@@ -21,6 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.sa7.jobfiy.Database.Job
 import com.sa7.jobfiy.R
 import com.sa7.jobfiy.ui.commonUi.JobCard
@@ -32,7 +33,7 @@ import com.sa7.jobfiy.ui.theme.Perpi
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun JobifyScreen() {
+fun JobifyScreen(navController: NavController) {
     var isSheetVisible by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
@@ -81,7 +82,7 @@ fun JobifyScreen() {
                 contentPadding = PaddingValues(bottom = 16.dp)
             ) {
                 items(15) {
-                    JobCard()
+                    JobCard(navController)
                     Spacer(modifier = Modifier.height(12.dp))
                 }
             }
@@ -298,8 +299,4 @@ fun SearchBar(screenWidth: Dp) {
     }
 }
 
-@Preview(showSystemUi = true)
-@Composable
-private fun JobifyScreenPreview() {
-    JobifyScreen()
-}
+

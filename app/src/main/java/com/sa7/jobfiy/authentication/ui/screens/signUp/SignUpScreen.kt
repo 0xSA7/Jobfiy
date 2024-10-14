@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.sa7.jobfiy.R
 import com.sa7.jobfiy.authentication.ui.component.ButtonComponent
 import com.sa7.jobfiy.authentication.ui.component.ClickableTextComponent
@@ -25,11 +26,11 @@ import com.sa7.jobfiy.authentication.ui.component.HeadingTextComponent
 import com.sa7.jobfiy.authentication.ui.component.PasswordTextFieldComponent
 import com.sa7.jobfiy.authentication.ui.component.TextFieldComponent
 import com.sa7.jobfiy.authentication.ui.component.NormalTextComponent
-import com.sa7.jobfiy.authentication.ui.navigation.AppRoute
-import com.sa7.jobfiy.authentication.ui.navigation.Screen
+import com.sa7.jobfiy.ui.navigation.Routes
+
 
 @Composable
-fun SignUpScreen(signUpViewModel: SignUpViewModel = viewModel()) {
+fun SignUpScreen(navController: NavController, signUpViewModel: SignUpViewModel = viewModel()) {
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -108,7 +109,8 @@ fun SignUpScreen(signUpViewModel: SignUpViewModel = viewModel()) {
                 Spacer(modifier = Modifier.heightIn(10.dp))
                 GoogleButtonComponent()
                 ClickableTextComponent("Already have an account? Sign In") {
-                    AppRoute.navigateTo(Screen.LoginScreen)
+                    navController.navigate(Routes.LOGIN)
+
                 }
             }
         }

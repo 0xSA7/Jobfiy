@@ -76,6 +76,7 @@ This project is licensed under the MIT License. See the LICENSE file for more de
 - [Khaled Mahmoud](https://github.com/KhaledMa7mouad)
 - [Eyad Amro](https://github.com/eyadamr905)
 - [SA7](https://github.com/0xSA7)
+- [Mina](https://github.com/Mina-Kalifa)
 - [Sara](https://github.com/sara-saye)
 - [Polla joseph](https://github.com/PollaJoseph)
 ### Special thanks for
